@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: spring-ai-tutorial
+
+  # 总是执行数据库初始化脚本
+  sql:
+    init:
+      mode: always
+
+  # 数据库连接信息
+  datasource:
+    url: jdbc:postgresql://localhost:5434/postgresml
+    username: postgres
+    password: password
+
+  # PostgresML Embedding 相关配置
+  ai:
+    postgresml:
+      embedding:
+        create-extension: true # 自动创建扩展
+        options:
+          vector-type: pg_vector # 向量类型
+
+    # PgVector 向量存储相关配置
+    vectorstore:
+      pgvector:
+        dimensions: 768 # 向量维度
+        initialize-schema: true # 自动初始化 Schema
+
+    # JDBC 聊天记忆相关配置
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always # 自动初始化 Schema
