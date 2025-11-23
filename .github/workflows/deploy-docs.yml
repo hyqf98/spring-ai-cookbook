@@ -1,19 +1,28 @@
 name: Deploy Docs to ECS
 
 on:
-  push:
-    branches:
-      - main
-      - master
-    paths:
-      - 'docs/**'
-      - '.github/workflows/deploy-docs.yml'
+  # 手动触发（推荐方式）
   workflow_dispatch:
+    inputs:
+      deploy_message:
+        description: '部署说明（可选）'
+        required: false
+        default: '手动部署文档'
+  
+  # 可选：只在特定提交信息时自动触发（取消注释以启用）
+  # push:
+  #   branches:
+  #     - main
+  #     - master
+  #   paths:
+  #     - 'docs/**'
+  #     - '.github/workflows/deploy-docs.yml'
+  # 注意：如果启用自动触发，需要在提交信息中包含 [deploy-docs] 才会执行
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -62,20 +71,16 @@ jobs:
       - name: Deploy to ECS
         run: |
           echo "🚀 开始部署到 ECS 服务器..."
-          echo "服务器: ${{ secrets.ECS_HOST }}"
-          echo "用户: ${{ secrets.ECS_USER }}"
-          echo "部署路径: ${{ secrets.ECS_DEPLOY_PATH }}"
-          
+
           rsync -avz --delete \
             --progress \
             --exclude='.git' \
             -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
             docs/.vitepress/dist/ \
             ${{ secrets.ECS_USER }}@${{ secrets.ECS_HOST }}:${{ secrets.ECS_DEPLOY_PATH }}/
-          
+
           if [ $? -eq 0 ]; then
             echo "✅ 文档已成功部署到 ECS 服务器"
-            echo "部署路径: ${{ secrets.ECS_DEPLOY_PATH }}"
           else
             echo "❌ 部署失败，请检查日志"
             exit 1
