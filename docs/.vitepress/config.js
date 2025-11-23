@@ -268,6 +268,14 @@ export default defineConfig(
           defer: true,
           'data-host-url': 'https://umami.dong4j.site',
           'data-website-id': '1e2e22cc-637c-49e6-aeaf-c2bd0b47f92b'
+        }],
+        ['script', {
+          src: 'https://cdn.dong4j.site/source/static/counter.js',
+          defer: true,
+          id: 'online-counter',
+          interval: '60000',
+          api: 'https://umami.dong4j.site/counter',
+          room: '000000002'
         }]
       ],
 

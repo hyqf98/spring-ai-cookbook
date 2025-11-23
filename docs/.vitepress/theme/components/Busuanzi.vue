@@ -13,8 +13,64 @@
       <span class="busuanzi-value" id="busuanzi_site_pv">--</span>
       <span class="busuanzi-unit">次</span>
     </span>
+    <span class="busuanzi-separator" v-if="onlineCount > 0">·</span>
+    <span class="busuanzi-item" v-if="onlineCount > 0">
+      <span class="busuanzi-emoji">🙉</span>
+      <span class="busuanzi-label">在线人数</span>
+      <span class="online-dot"></span>
+      <span class="busuanzi-value online-count">{{ onlineCount }}</span>
+      <span class="busuanzi-unit">人</span>
+    </span>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { inBrowser } from 'vitepress'
+
+const onlineCount = ref(0)
+let intervalId: number | null = null
+
+// 获取在线人数
+const fetchOnlineCount = async () => {
+  if (!inBrowser) return
+  
+  try {
+    const api = 'https://umami.dong4j.site/counter?room=000000002'
+    const response = await fetch(api, {
+      method: 'GET',
+    })
+    
+    if (response.ok) {
+      const data = await response.json()
+      if (data.success && data.data && data.data.online_user !== undefined) {
+        onlineCount.value = data.data.online_user
+      }
+    }
+  } catch (error) {
+    console.warn('Error fetching online count:', error)
+  }
+}
+
+onMounted(() => {
+  if (!inBrowser) return
+  
+  // 初始获取
+  fetchOnlineCount()
+  
+  // 每 60 秒更新一次
+  intervalId = window.setInterval(() => {
+    fetchOnlineCount()
+  }, 60000)
+})
+
+onBeforeUnmount(() => {
+  if (intervalId !== null) {
+    clearInterval(intervalId)
+    intervalId = null
+  }
+})
+</script>
 
 <style scoped>
 .busuanzi {
@@ -52,6 +108,7 @@
   font-weight: 600;
   min-width: 2ch;
   text-align: center;
+  margin-left: 4px;
 }
 
 .busuanzi-unit {
@@ -63,6 +120,35 @@
   color: var(--vp-c-divider);
   margin: 0 4px;
   user-select: none;
+}
+
+.online-dot {
+  width: 8px;
+  height: 8px;
+  background: #4caf50;
+  border-radius: 50%;
+  animation: breathe 2s ease-in-out infinite;
+  flex-shrink: 0;
+  display: inline-block;
+  margin-left: 4px;
+}
+
+.online-count {
+  color: var(--vp-c-brand);
+  font-weight: 600;
+}
+
+@keyframes breathe {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+    box-shadow: 0 0 8px 4px rgba(76, 175, 80, 0.4);
+  }
 }
 
 @media (max-width: 640px) {
