@@ -1,6 +1,6 @@
 spring:
   application:
-    name: spring-ai-tutorial
+    name: spring-ai-started
 
   # 总是执行数据库初始化脚本
   sql:
