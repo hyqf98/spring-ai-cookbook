@@ -1,0 +1,83 @@
+name: Deploy Docs to ECS
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'docs/**'
+      - '.github/workflows/deploy-docs.yml'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Sync docs from modules
+        working-directory: ./docs
+        run: |
+          chmod +x sync-docs.sh
+          bash sync-docs.sh
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: docs/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./docs
+        run: npm install
+
+      - name: Build docs
+        working-directory: ./docs
+        run: npm run build
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.ECS_SSH_PRIVATE_KEY }}
+
+      - name: Add ECS server to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.ECS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Verify build output
+        working-directory: ./docs
+        run: |
+          if [ ! -d ".vitepress/dist" ]; then
+            echo "❌ 构建失败：.vitepress/dist 目录不存在"
+            exit 1
+          fi
+          echo "✅ 构建输出验证成功"
+          ls -lah .vitepress/dist/ | head -20
+
+      - name: Deploy to ECS
+        run: |
+          echo "🚀 开始部署到 ECS 服务器..."
+          echo "服务器: ${{ secrets.ECS_HOST }}"
+          echo "用户: ${{ secrets.ECS_USER }}"
+          echo "部署路径: ${{ secrets.ECS_DEPLOY_PATH }}"
+          
+          rsync -avz --delete \
+            --progress \
+            --exclude='.git' \
+            -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+            docs/.vitepress/dist/ \
+            ${{ secrets.ECS_USER }}@${{ secrets.ECS_HOST }}:${{ secrets.ECS_DEPLOY_PATH }}/
+          
+          if [ $? -eq 0 ]; then
+            echo "✅ 文档已成功部署到 ECS 服务器"
+            echo "部署路径: ${{ secrets.ECS_DEPLOY_PATH }}"
+          else
+            echo "❌ 部署失败，请检查日志"
+            exit 1
+          fi
+

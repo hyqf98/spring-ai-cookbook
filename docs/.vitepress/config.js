@@ -200,6 +200,12 @@ export default defineConfig({
                               // 如果部署到子路径，修改 base 为 '/spring-ai-cookbook/'
                               // 当前配置为根域名 springai.dong4j.site
 
+                              // 忽略死链接检查（用于开发环境的 localhost 链接等）
+                              ignoreDeadLinks: [
+                                /^http:\/\/localhost/,
+                                /^https:\/\/localhost/
+                              ],
+
                               head: [
                                 ['link', {rel: 'icon', href: '/favicon.ico'}]
                               ],
