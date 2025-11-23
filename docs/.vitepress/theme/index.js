@@ -17,9 +17,10 @@ import {NolebaseGitChangelogPlugin} from '@nolebase/vitepress-plugin-git-changel
 import '@nolebase/vitepress-plugin-git-changelog/client/style.css'
 import '@nolebase/vitepress-plugin-enhanced-mark/client/style.css'
 import "vitepress-markdown-timeline/dist/theme/index.css";
-import {useRoute} from 'vitepress'
+import {inBrowser, useRoute} from 'vitepress'
 import mediumZoom from 'medium-zoom'
-
+import {NProgress} from "nprogress-v2/dist/index.js"; // 进度条组件
+import "nprogress-v2/dist/index.css"; // 进度条样式
 import './custom.css'
 
 export const Theme = {
@@ -49,9 +50,20 @@ export const Theme = {
       ],
     })
   },
-  enhanceApp({app}) {
-    app.use(NolebaseInlineLinkPreviewPlugin),
-        app.use(NolebaseGitChangelogPlugin)
+  enhanceApp({app, router}) {
+    app.use(NolebaseInlineLinkPreviewPlugin)
+    app.use(NolebaseGitChangelogPlugin)
+    // 切换路由进度条
+    if (inBrowser) {
+      NProgress.configure({showSpinner: false});
+
+      router.onBeforeRouteChange = () => {
+        NProgress.start(); // 开始进度条
+      };
+      router.onAfterRouteChange = () => {
+        NProgress.done(); // 停止进度条
+      };
+    }
   },
 }
 
