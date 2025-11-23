@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<!--
+    Suppression filter for Checkstyle violations that should be ignored.
+    This file can be used to suppress violations for specific files or directories.
+-->
+
+<suppressions>
+    <!-- Suppress all violations for generated sources -->
+    <suppress files=".*[\\/]generated[\\/].*" checks=".*"/>
+
+    <!-- Suppress all violations for test sources if needed -->
+    <!-- <suppress files=".*[\\/]src[\\/]test[\\/].*" checks=".*"/> -->
+</suppressions>
+

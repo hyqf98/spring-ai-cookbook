@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * ChatClientApplication
- * <p>
- * Spring Boot 应用启动类, 用于启动聊天客户端应用程序. 该类通过 SpringApplication.run 方法启动 Spring Boot 应用, 初始化相关配置和组件.
+ *
+ * <p>Spring Boot 应用启动类, 用于启动聊天客户端应用程序. 该类通过 SpringApplication.run 方法启动 Spring Boot 应用, 初始化相关配置和组件.
  *
  * @author zeka.stack.team
  * @version 1.0.0
@@ -19,8 +19,8 @@ public class ChatClientApplication {
 
     /**
      * 程序的入口方法, 用于启动 Spring Boot 应用
-     * <p>
-     * 该方法通过 SpringApplication 运行 ChatClientApplication 类, 启动聊天客户端应用
+     *
+     * <p>该方法通过 SpringApplication 运行 ChatClientApplication 类, 启动聊天客户端应用
      *
      * @param args 启动参数
      */

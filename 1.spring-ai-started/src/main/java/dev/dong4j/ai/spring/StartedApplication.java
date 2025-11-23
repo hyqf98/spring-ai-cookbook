@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * 应用启动类
- * <p>
- * 用于启动 Spring Boot 应用程序, 包含主方法以运行应用程序
+ *
+ * <p>用于启动 Spring Boot 应用程序, 包含主方法以运行应用程序
  *
  * @author zeka.stack.team
  * @version 1.0.0
@@ -19,13 +19,12 @@ public class StartedApplication {
 
     /**
      * 主方法, 用于启动 Spring Boot 应用程序
-     * <p>
-     * 该方法通过 SpringApplication 运行指定的 Spring Boot 应用类, 启动嵌入式服务器并开始应用运行.
+     *
+     * <p>该方法通过 SpringApplication 运行指定的 Spring Boot 应用类, 启动嵌入式服务器并开始应用运行.
      *
      * @param args 启动参数, 通常为命令行传入的参数
      */
     public static void main(String[] args) {
         SpringApplication.run(StartedApplication.class, args);
     }
-
 }

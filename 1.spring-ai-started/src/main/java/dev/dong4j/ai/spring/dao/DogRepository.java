@@ -5,8 +5,8 @@ import org.springframework.data.repository.ListCrudRepository;
 
 /**
  * 狗类仓库接口
- * <p>
- * 定义了对 Dog 实体进行基础增删改查操作的接口, 继承自 ListCrudRepository 接口, 提供通用的数据库操作方法
+ *
+ * <p>定义了对 Dog 实体进行基础增删改查操作的接口, 继承自 ListCrudRepository 接口, 提供通用的数据库操作方法
  *
  * @author zeka.stack.team
  * @version 1.0.0
@@ -14,14 +14,12 @@ import org.springframework.data.repository.ListCrudRepository;
  * @date 2025.11.23
  * @since 1.0.0
  */
-interface DogRepository extends ListCrudRepository<Dog, Integer> {
-}
-
+interface DogRepository extends ListCrudRepository<Dog, Integer> {}
 
 /**
  * 狗的记录类
- * <p>
- * 用于表示狗的基本信息, 包含狗的唯一标识, 名称, 主人和描述等属性
+ *
+ * <p>用于表示狗的基本信息, 包含狗的唯一标识, 名称, 主人和描述等属性
  *
  * @author zeka.stack.team
  * @version 1.0.0
@@ -29,5 +27,4 @@ interface DogRepository extends ListCrudRepository<Dog, Integer> {
  * @date 2025.11.23
  * @since 1.0.0
  */
-record Dog(@Id int id, String name, String owner, String description) {
-}
+record Dog(@Id int id, String name, String owner, String description) {}

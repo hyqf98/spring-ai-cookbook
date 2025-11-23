@@ -1,0 +1,7 @@
+# This file defines the formatting options for Google Java Format.
+# See https://github.com/google/google-java-format for more information.
+
+# Use the default Google Java Format style (AOSP style)
+# Options: GOOGLE (default), AOSP
+style = AOSP
+

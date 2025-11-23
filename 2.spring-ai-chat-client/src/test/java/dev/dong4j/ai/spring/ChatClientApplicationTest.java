@@ -5,8 +5,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * 聊天客户端应用测试类
- * <p>
- * 用于集成测试 ChatClientApplication 的上下文加载和基本功能验证
+ *
+ * <p>用于集成测试 ChatClientApplication 的上下文加载和基本功能验证
  *
  * @author zeka.stack.team
  * @version 1.0.0
@@ -18,11 +18,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 class ChatClientApplicationTest {
     /**
      * 测试 Spring 上下文加载功能
-     * <p>
-     * 测试场景: 验证 Spring 容器是否能够正确加载配置和 Bean
-     * 预期结果: 上下文加载应成功, 无异常抛出
+     *
+     * <p>测试场景: 验证 Spring 容器是否能够正确加载配置和 Bean 预期结果: 上下文加载应成功, 无异常抛出
      */
     @Test
-    void contextLoads() {
-    }
+    void contextLoads() {}
 }

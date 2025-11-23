@@ -16,7 +16,10 @@
     <packaging>pom</packaging>
     <url/>
     <licenses>
-        <license/>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
     </licenses>
     <developers>
         <developer/>
@@ -30,6 +33,8 @@
     <properties>
         <java.version>25</java.version>
         <spring-ai.version>1.1.0</spring-ai.version>
+        <google-java-format.version>1.23.0</google-java-format.version>
+        <checkstyle.version>10.17.0</checkstyle.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -59,5 +64,70 @@
     <modules>
         <module>1.spring-ai-started</module>
         <module>2.spring-ai-chat-client</module>
+        <module>3.spring-ai-prompts</module>
+        <module>4.spring-ai-structured</module>
+        <module>5.spring-ai-multimodality</module>
+        <module>6.spring-ai-model</module>
+        <module>7.spring-ai-model-chat</module>
+        <module>8.spring-ai-model-embedding</module>
+        <module>9.spring-ai-model-image</module>
+        <module>10.spring-ai-model-audio</module>
+        <module>11.spring-ai-model-moderation</module>
+        <module>12.spring-ai-model-memory</module>
+        <module>13.spring-ai-model-tool-calling</module>
+        <module>14.spring-ai-mcp</module>
+        <module>15.spring-ai-rag</module>
+        <module>16.spring-ai-model-evaluation</module>
+        <module>17.spring-ai-vector-database</module>
+        <module>18.spring-ai-observability</module>
+        <module>19.spring-ai-docker</module>
+        <module>20.spring-ai-testcontainer</module>
     </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Google Java Format Plugin -->
+                <plugin>
+                    <groupId>com.github.spotbugs</groupId>
+                    <artifactId>spotbugs-maven-plugin</artifactId>
+                    <version>4.8.2.2</version>
+                </plugin>
+                <!-- Checkstyle Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>3.3.1</version>
+                    <configuration>
+                        <configLocation>checkstyle.xml</configLocation>
+                        <consoleOutput>true</consoleOutput>
+                        <failsOnError>true</failsOnError>
+                        <linkXRef>false</linkXRef>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>11.0.1</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <!-- Google Java Format -->
+            <plugin>
+                <groupId>com.spotify.fmt</groupId>
+                <artifactId>fmt-maven-plugin</artifactId>
+                <version>2.29</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
