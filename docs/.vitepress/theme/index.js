@@ -25,6 +25,7 @@ import {initComponent} from 'vitepress-plugin-legend/component'
 import 'vitepress-plugin-legend/dist/index.css'
 
 import ArticleMetadata from "./components/ArticleMetadata.vue"
+import BackToTop from "./components/BackToTop.vue"
 
 import './custom.css'
 
@@ -53,6 +54,8 @@ export const Theme = {
       'layout-top': () => [
         h(NolebaseHighlightTargetedHeading),
       ],
+      // Back to top button
+      'layout-bottom': () => h(BackToTop),
     })
   },
   enhanceApp({app, router}) {
