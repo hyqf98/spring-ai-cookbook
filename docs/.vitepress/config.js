@@ -2,6 +2,8 @@ import {defineConfig} from 'vitepress'
 import fs from 'fs'
 import path from 'path'
 import {fileURLToPath} from 'url'
+import {InlineLinkPreviewElementTransform} from '@nolebase/vitepress-plugin-inline-link-preview/markdown-it'
+import {GitChangelog, GitChangelogMarkdownSection,} from '@nolebase/vitepress-plugin-git-changelog/vite'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -193,6 +195,13 @@ function generateSidebar() {
 export default defineConfig(
     {
       vite: {
+        plugins: [
+          GitChangelog({
+                         // Fill in your repository URL here
+                         repoURL: () => 'https://github.com/dong4j/spring-ai-cookbook',
+                       }),
+          GitChangelogMarkdownSection(),
+        ],
         optimizeDeps: {
           exclude: [
             '@nolebase/vitepress-plugin-enhanced-readabilities/client',
@@ -205,6 +214,7 @@ export default defineConfig(
             // If there are other packages that need to be processed by Vite, you can add them here.
             '@nolebase/vitepress-plugin-enhanced-readabilities',
             '@nolebase/ui',
+            '@nolebase/vitepress-plugin-highlight-targeted-heading',
           ],
         },
       },
@@ -233,6 +243,10 @@ export default defineConfig(
           // 开启图片懒加载
           lazyLoading: true
         },
+        config(md) {
+          // other markdown-it configurations...
+          md.use(InlineLinkPreviewElementTransform)
+        }
       },
 
       themeConfig: {
