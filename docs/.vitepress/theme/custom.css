@@ -180,6 +180,11 @@ a:hover {
     color: var(--vp-c-brand);
 }
 
+/* 隐藏 VitePress 默认 footer */
+.VPFooter {
+    display: none !important;
+}
+
 /* 响应式优化 */
 @media (max-width: 768px) {
     .VPHero .name {

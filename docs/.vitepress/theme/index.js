@@ -79,7 +79,7 @@ export const Theme = {
       'layout-top': () => [
         h(NolebaseHighlightTargetedHeading),
       ],
-      // Back to top button and busuanzi
+      // Back to top button and busuanzi (with footer)
       'layout-bottom': () => [
         h(BackToTop),
         h(bsz),
