@@ -26,6 +26,19 @@ export const EXTERNAL_SERVICES = {
 } as const
 
 /**
+ * GitHub 仓库配置
+ */
+export const GITHUB_CONFIG = {
+  owner: 'dong4j',
+  repo: 'spring-ai-cookbook',
+  branch: 'main',
+  url: 'https://github.com/dong4j/spring-ai-cookbook',
+  get editUrl() {
+    return `${this.url}/edit/${this.branch}/docs/:path`
+  },
+} as const
+
+/**
  * 统计配置
  */
 export const ANALYTICS_CONFIG = {

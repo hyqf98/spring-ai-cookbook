@@ -9,7 +9,7 @@ import {BiDirectionalLinks} from '@nolebase/markdown-it-bi-directional-links'
 import timeline from "vitepress-markdown-timeline";
 import {groupIconMdPlugin, groupIconVitePlugin} from 'vitepress-plugin-group-icons'
 import {vitepressPluginLegend} from 'vitepress-plugin-legend'
-import {EXTERNAL_SERVICES} from './theme/config/constants.ts'
+import {EXTERNAL_SERVICES, GITHUB_CONFIG} from './theme/config/constants.ts'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -230,7 +230,7 @@ export default defineConfig(
           GitChangelog(
               {
                 // Fill in your repository URL here
-                repoURL: () => 'https://github.com/dong4j/spring-ai-cookbook',
+                repoURL: () => GITHUB_CONFIG.url,
               }),
           GitChangelogMarkdownSection(),
         ],
@@ -327,7 +327,7 @@ export default defineConfig(
         sidebar: generateSidebar(),
 
         socialLinks: [
-          {icon: 'github', link: 'https://github.com/dong4j/spring-ai-cookbook'}
+          {icon: 'github', link: GITHUB_CONFIG.url}
         ],
 
         footer: {
@@ -340,7 +340,7 @@ export default defineConfig(
         },
 
         editLink: {
-          pattern: 'https://github.com/dong4j/spring-ai-cookbook/edit/main/docs/:path',
+          pattern: GITHUB_CONFIG.editUrl,
           text: '在 GitHub 上编辑此页'
         },
 

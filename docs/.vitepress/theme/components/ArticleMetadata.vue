@@ -2,7 +2,7 @@
 import { useData } from 'vitepress'
 import { computed, ref, onMounted, nextTick } from 'vue'
 import { inBrowser } from 'vitepress'
-import { countWord } from '../utils/functions'
+import { countWord, fetchBusuanzi } from '../utils/functions'
 
 const { page } = useData()
 const date = computed(() => {
@@ -34,55 +34,6 @@ const readTime = computed(() => {
     return Math.ceil((wordTime.value + imageTime.value) / 60)
 })
 
-// 手动触发 busuanzi 数据加载
-function fetchBusuanzi() {
-  if (!inBrowser) return
-  
-  try {
-    const api = 'https://api.dong4j.site/busuanzi/api'
-    const xhr = new XMLHttpRequest()
-    xhr.open('POST', api, true)
-    
-    // 获取存储的 identity
-    const identity = localStorage.getItem('bsz-id')
-    if (identity) {
-      xhr.setRequestHeader('Authorization', 'Bearer ' + identity)
-    }
-    
-    xhr.setRequestHeader('x-bsz-referer', window.location.href)
-    xhr.setRequestHeader('Content-Type', 'application/json')
-    
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        try {
-          const data = JSON.parse(xhr.responseText)
-          if (data.success && data.data) {
-            const pagePv = data.data.page_pv
-            if (pagePv !== undefined) {
-              const pvElement = document.getElementById('busuanzi_page_pv')
-              if (pvElement) {
-                pvElement.textContent = pagePv.toString()
-              }
-            }
-            
-            // 保存 identity
-            const newIdentity = xhr.getResponseHeader('Set-Bsz-Identity')
-            if (newIdentity && newIdentity !== '') {
-              localStorage.setItem('bsz-id', newIdentity)
-            }
-          }
-        } catch (error) {
-          console.warn('Error parsing busuanzi response:', error)
-        }
-      }
-    }
-    
-    xhr.send()
-  } catch (error) {
-    console.warn('Error fetching busuanzi:', error)
-  }
-}
-
 function analyze() {
     document.querySelectorAll('.meta-des').forEach(v => v.remove())
     const docDomContainer = window.document.querySelector('#VPContent')
@@ -108,13 +59,13 @@ onMounted(() => {
         if (pvElement.textContent === '--' || !pvElement.textContent || pvElement.textContent.trim() === '') {
           // 延迟执行，确保页面完全加载
           setTimeout(() => {
-            fetchBusuanzi()
+            fetchBusuanzi({ updatePagePv: true })
           }, 500)
         }
       } else {
         // 如果元素不存在，延迟重试
         setTimeout(() => {
-          fetchBusuanzi()
+          fetchBusuanzi({ updatePagePv: true })
         }, 1000)
       }
     })

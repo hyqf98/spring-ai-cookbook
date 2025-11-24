@@ -27,8 +27,9 @@ import 'vitepress-plugin-legend/dist/index.css'
 import ArticleMetadata from "./components/ArticleMetadata.vue"
 import BackToTop from "./components/BackToTop.vue"
 
-import bsz from "./components/Busuanzi.vue";
+import Footer from "./components/Footer.vue";
 import giscusTalk from 'vitepress-plugin-comment-with-giscus';
+import { fetchBusuanzi } from './utils/functions'
 
 import './custom.css'
 
@@ -79,10 +80,10 @@ export const Theme = {
       'layout-top': () => [
         h(NolebaseHighlightTargetedHeading),
       ],
-      // Back to top button and busuanzi (with footer)
+      // Back to top button and footer
       'layout-bottom': () => [
         h(BackToTop),
-        h(bsz),
+        h(Footer),
       ],
     })
   },
@@ -117,61 +118,10 @@ export const Theme = {
 
           // 路由切换后重新加载 busuanzi 统计数据
           setTimeout(() => {
-            try {
-              // 手动调用 busuanzi API 获取页面数据
-              const api = 'https://api.dong4j.site/busuanzi/api'
-              const xhr = new XMLHttpRequest()
-              xhr.open('POST', api, true)
-
-              const identity = localStorage.getItem('bsz-id')
-              if (identity) {
-                xhr.setRequestHeader('Authorization', 'Bearer ' + identity)
-              }
-
-              xhr.setRequestHeader('x-bsz-referer', window.location.href)
-              xhr.setRequestHeader('Content-Type', 'application/json')
-
-              xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                  try {
-                    const data = JSON.parse(xhr.responseText)
-                    if (data.success && data.data) {
-                      const pagePv = data.data.page_pv
-                      if (pagePv !== undefined) {
-                        const pvElement = document.getElementById('busuanzi_page_pv')
-                        if (pvElement) {
-                          pvElement.textContent = pagePv.toString()
-                        }
-                      }
-
-                      // 更新 site 统计数据
-                      const siteUv = data.data.site_uv
-                      const sitePv = data.data.site_pv
-                      const uvElement = document.getElementById('busuanzi_site_uv')
-                      const sitePvElement = document.getElementById('busuanzi_site_pv')
-                      if (siteUv !== undefined && uvElement) {
-                        uvElement.textContent = siteUv.toString()
-                      }
-                      if (sitePv !== undefined && sitePvElement) {
-                        sitePvElement.textContent = sitePv.toString()
-                      }
-
-                      // 保存 identity
-                      const newIdentity = xhr.getResponseHeader('Set-Bsz-Identity')
-                      if (newIdentity && newIdentity !== '') {
-                        localStorage.setItem('bsz-id', newIdentity)
-                      }
-                    }
-                  } catch (error) {
-                    console.warn('Error parsing busuanzi response:', error)
-                  }
-                }
-              }
-
-              xhr.send()
-            } catch (error) {
-              console.warn('Error fetching busuanzi on route change:', error)
-            }
+            fetchBusuanzi({ 
+              updatePagePv: true, 
+              updateSiteStats: true 
+            })
           }, 300)
         }
       };
