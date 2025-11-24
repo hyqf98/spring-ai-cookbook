@@ -852,7 +852,8 @@ const members = [
 ]
 </script>
 
-<VPTeamMembers size="medium" :members="members" />
+<VPTeamMembers size="small" :members="members" />
+
 
 ## 💬 联系我们
 

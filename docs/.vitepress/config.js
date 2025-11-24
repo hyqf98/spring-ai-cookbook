@@ -9,6 +9,7 @@ import {BiDirectionalLinks} from '@nolebase/markdown-it-bi-directional-links'
 import timeline from "vitepress-markdown-timeline";
 import {groupIconMdPlugin, groupIconVitePlugin} from 'vitepress-plugin-group-icons'
 import {vitepressPluginLegend} from 'vitepress-plugin-legend'
+import {EXTERNAL_SERVICES} from './theme/config/constants.ts'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -270,26 +271,18 @@ export default defineConfig(
       head: [
         ['link', {rel: 'icon', href: '/favicon.ico'}],
         ['script', {
-          src: 'https://cdn.dong4j.site/source/static/busuanzi.self.js',
+          src: EXTERNAL_SERVICES.busuanzi.scriptUrl,
           async: true,
-          'data-api': 'https://api.dong4j.site/busuanzi/api',
-          'data-prefix': 'busuanzi',
-          'data-style': 'default',
+          'data-api': EXTERNAL_SERVICES.busuanzi.apiUrl,
+          'data-prefix': EXTERNAL_SERVICES.busuanzi.prefix,
+          'data-style': EXTERNAL_SERVICES.busuanzi.style,
           'data-pjax': 'true'
         }],
         ['script', {
-          src: 'https://cdn.dong4j.site/source/static/umami.self.js',
+          src: EXTERNAL_SERVICES.umami.scriptUrl,
           defer: true,
-          'data-host-url': 'https://umami.dong4j.site',
-          'data-website-id': '1e2e22cc-637c-49e6-aeaf-c2bd0b47f92b'
-        }],
-        ['script', {
-          src: 'https://cdn.dong4j.site/source/static/counter.js',
-          defer: true,
-          id: 'online-counter',
-          interval: '60000',
-          api: 'https://umami.dong4j.site/counter',
-          room: '000000002'
+          'data-host-url': EXTERNAL_SERVICES.umami.hostUrl,
+          'data-website-id': EXTERNAL_SERVICES.umami.websiteId
         }]
       ],
 

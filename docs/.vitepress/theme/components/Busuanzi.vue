@@ -33,51 +33,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { inBrowser } from 'vitepress'
+import { useOnlineCounter } from '../composables/useOnlineCounter'
 
-const onlineCount = ref(0)
-let intervalId: number | null = null
-
-// 获取在线人数
-const fetchOnlineCount = async () => {
-  if (!inBrowser) return
-  
-  try {
-    const api = 'https://umami.dong4j.site/counter?room=000000002'
-    const response = await fetch(api, {
-      method: 'GET',
-    })
-    
-    if (response.ok) {
-      const data = await response.json()
-      if (data.success && data.data && data.data.online_user !== undefined) {
-        onlineCount.value = data.data.online_user
-      }
-    }
-  } catch (error) {
-    console.warn('Error fetching online count:', error)
-  }
-}
-
-onMounted(() => {
-  if (!inBrowser) return
-  
-  // 初始获取
-  fetchOnlineCount()
-  
-  // 每 60 秒更新一次
-  intervalId = window.setInterval(() => {
-    fetchOnlineCount()
-  }, 60000)
-})
-
-onBeforeUnmount(() => {
-  if (intervalId !== null) {
-    clearInterval(intervalId)
-    intervalId = null
-  }
-})
+const { onlineCount } = useOnlineCounter()
 </script>
 
 <style scoped>
