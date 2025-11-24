@@ -6,13 +6,13 @@
 
 ### 安装依赖
 
-```bash
+```bash [bash]
 npm install
 ```
 
 ### 开发模式
 
-```bash
+```bash [bash]
 npm run dev
 ```
 
@@ -20,7 +20,7 @@ npm run dev
 
 ### 构建文档
 
-```bash
+```bash [bash]
 npm run build
 ```
 
@@ -28,7 +28,7 @@ npm run build
 
 ### 预览构建结果
 
-```bash
+```bash [bash]
 npm run preview
 ```
 
@@ -36,7 +36,7 @@ npm run preview
 
 当子模块的 README.md 或图片资源更新后，需要同步到 docs 目录：
 
-```bash
+```bash [bash]
 npm run sync
 # 或者
 bash sync-docs.sh

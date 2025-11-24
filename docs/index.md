@@ -109,7 +109,7 @@ Spring AI Cookbook 是一个全面的 Spring AI 学习教程项目，包含 **20
 
 ## 🚀 快速开始
 
-```bash
+```bash [bash]
 # 1. 克隆项目
 git clone https://github.com/dong4j/spring-ai-cookbook.git
 

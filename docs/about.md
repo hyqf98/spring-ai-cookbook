@@ -27,13 +27,13 @@
 1. **Fork 项目**：点击右上角的 Fork 按钮，将项目 Fork 到你的 GitHub 账号
 
 2. **克隆仓库**：
-   ```bash
+   ```bash [bash]
    git clone https://github.com/YOUR_USERNAME/spring-ai-cookbook.git
    cd spring-ai-cookbook
    ```
 
 3. **创建分支**：
-   ```bash
+   ```bash [bash]
    git checkout -b feature/your-feature-name
    # 或
    git checkout -b fix/your-bug-fix
@@ -42,7 +42,7 @@
 4. **进行修改**：按照代码规范和文档规范进行开发
 
 5. **提交代码**：
-   ```bash
+   ```bash [bash]
    git add .
    git commit -m "feat: 添加新功能描述"
    git push origin feature/your-feature-name
@@ -64,7 +64,7 @@
 
 示例：
 
-```bash
+```bash [bash]
 feat: 添加 OpenAI Chat Model 支持
 fix: 修复 RAG 检索时的空指针异常
 docs: 更新快速开始文档
@@ -104,7 +104,7 @@ max_line_length = 120
 
 使用 Google Java Format (AOSP 风格)：
 
-```bash
+```bash [bash]
 # 格式化单个文件
 mvn com.spotify.fmt:fmt-maven-plugin:format -pl <module-name>
 
@@ -114,7 +114,7 @@ mvn com.spotify.fmt:fmt-maven-plugin:format
 
 #### Checkstyle 检查
 
-```bash
+```bash [bash]
 # 检查单个模块
 mvn checkstyle:check -pl <module-name>
 
@@ -156,6 +156,80 @@ mvn checkstyle:check
     - 如果原始图片是其他格式（如 PNG、JPG），请先转换为 WebP 格式
 - **列表**：使用 `-` 或 `*` 创建无序列表，使用数字创建有序列表
 - **引用**：使用 `>` 创建引用块
+
+> 推荐使用 Typora 编辑, 可以设置图片保存路径:
+>
+> ![20251124185628_pa8owW61](./imgs/20251124185628_pa8owW61.webp)
+>
+> 但是 png 转 webp 需要自行处理, 下面提供一段 Linux 脚本:
+>
+> ```bash [bash]
+> webp() {
+> input="$1"
+> output="$2"
+> 
+> if [ -z "$input" ]; then
+>  echo "Usage: webp <input_file> [output_file]"
+>  return 1
+> fi
+> 
+> # 如果没有传第二个参数，自动替换扩展名为 .webp
+> if [ -z "$output" ]; then
+>  filename="${input%.*}"   # 去掉扩展名
+>  output="${filename}.webp"
+> fi
+> 
+> # 删除元数据
+> exiftool -overwrite_original -all= "$input" > /dev/null 2>&1
+> 
+> # 转为 WebP
+> cwebp -q 50 "$input" -o "$output" > /dev/null 2>&1
+> 
+> echo "convert '$input' to '$output'"
+> }
+> ```
+>
+> 使用方式:
+> ```bash [bash]
+> # 1. 传入输入文件和输出文件
+> # 将 a.jpg 转为 a_small.webp
+> webp a.jpg a_small.webp
+> 
+> 
+> # 2. 只传一个参数（最常用）
+> # 输出自动变为同名 .webp，如：
+> # input = "picture.png"
+> # output = "picture.webp"
+> webp picture.png
+> 
+> # 3. 查看提示（不传参数）
+> webp
+> # 输出：Usage: webp <input_file> [output_file]
+> 
+> # 4. 批量转换（结合 shell 的 for 循环）
+> for img in *.jpg; do
+>   webp "$img"
+> done
+> # 将当前目录所有 jpg 自动转换为同名 webp
+> ```
+>
+> ---
+>
+> macOS 需要提前安装 `cwebp`:
+>
+> ```bash [bash]
+> brew install webp
+> ```
+>
+> [其他系统下载并安装 WebP](https://developers.google.com/speed/webp/download?hl=zh-cn)
+>
+> ---
+>
+> 如果直接在 IDEA 中编辑, 可以下载 [Markdown Image Kit](https://plugins.jetbrains.com/plugin/12192-markdown-image-kit/new-page) 插件, 提供与 Typora 相同的功能, 且提供 webp 转换:
+>
+> ![20251124191629_nl3ufSlJ](./imgs/20251124191629_nl3ufSlJ.webp)
+
+---
 
 ### VitePress 特殊语法
 
@@ -548,7 +622,7 @@ public class ChatController {
 
 ### 运行示例
 
-```bash
+```bash [bash]
 cd 1.spring-ai-started
 mvn spring-boot:run
 ```
@@ -591,7 +665,7 @@ public class Application {
 
 使用项目提供的同步脚本：
 
-```bash
+```bash [bash]
 # 在 docs 目录下执行
 cd docs
 npm run sync
@@ -614,7 +688,7 @@ bash sync-docs.sh
 
 如果需要手动同步单个模块：
 
-```bash
+```bash [bash]
 # 复制文档
 cp 1.spring-ai-started/README.md docs/1.spring-ai-started/index.md
 
@@ -664,7 +738,7 @@ Workflow 默认配置为**仅手动触发**，不会在每次提交时自动执�
 
 **✅ 会触发并执行部署**：
 
-```bash
+```bash [bash]
 # 场景 1：修改项目根目录的 README.md
 git add README.md
 git commit -m "更新项目说明 [deploy-docs]"
@@ -683,7 +757,7 @@ git push origin main
 
 **❌ 不会触发**：
 
-```bash
+```bash [bash]
 # 场景 1：提交信息缺少 [deploy-docs]
 git add README.md
 git commit -m "更新项目说明"  # ❌ 缺少 [deploy-docs]

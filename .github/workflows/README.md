@@ -10,7 +10,7 @@
 
 在本地执行：
 
-```bash
+```bash [bash]
 ssh-keygen -t rsa -b 4096 -C "github-actions-deploy" -f ~/.ssh/github_actions_deploy
 ```
 
@@ -23,7 +23,7 @@ ssh-keygen -t rsa -b 4096 -C "github-actions-deploy" -f ~/.ssh/github_actions_de
 
 将公钥内容添加到 ECS 服务器的 `~/.ssh/authorized_keys` 文件中：
 
-```bash
+```bash [bash]
 # 在本地执行，将公钥复制到 ECS 服务器
 ssh-copy-id -i ~/.ssh/github_actions_deploy.pub user@your-ecs-ip
 
@@ -44,7 +44,7 @@ cat ~/.ssh/github_actions_deploy.pub | ssh user@your-ecs-ip "mkdir -p ~/.ssh && 
 
 ### 4. 获取私钥内容
 
-```bash
+```bash [bash]
 # 在本地执行，复制私钥内容
 cat ~/.ssh/github_actions_deploy
 ```
@@ -89,7 +89,7 @@ Workflow 默认配置为**仅手动触发**，不会在每次提交时自动执�
 
 ### 完整流程示例
 
-```bash
+```bash [bash]
 # 场景 1：修改了项目根目录的 README.md，提交信息包含 [deploy-docs]
 # ✅ 满足所有条件 ✅ 会触发并执行部署
 git add README.md
@@ -129,7 +129,7 @@ git push origin main
 
 **触发示例**：
 
-```bash
+```bash [bash]
 # ✅ 会触发并执行部署（同时满足：README.md 变更 + 提交信息包含 [deploy-docs]）
 git commit -m "更新 README [deploy-docs]"
 git commit -m "[deploy-docs] 修复文档错误"
@@ -210,22 +210,22 @@ git commit -m "修复代码bug [deploy-docs]"  # 不是 README.md 或配置文�
 ### 使用说明
 
 1. 将配置文件复制到 ECS 服务器：
-   ```bash
+   ```bash [bash]
    sudo cp .github/workflows/nginx.conf /etc/nginx/sites-available/spring-ai-cookbook
    ```
 
 2. 创建符号链接：
-   ```bash
+   ```bash [bash]
    sudo ln -s /etc/nginx/sites-available/spring-ai-cookbook /etc/nginx/sites-enabled/
    ```
 
 3. 测试配置：
-   ```bash
+   ```bash [bash]
    sudo nginx -t
    ```
 
 4. 重载 Nginx：
-   ```bash
+   ```bash [bash]
    sudo systemctl reload nginx
    ```
 
