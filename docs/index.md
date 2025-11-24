@@ -10,11 +10,11 @@ hero:
     alt: Spring AI Cookbook
   actions:
     - theme: brand
-      text: 🔥 Spring AI 简介
+      text: 🚀 快速开始
       link: /0.spring-ai-introduction/
     - theme: alt
-      text: 🚀 快速开始
-      link: /1.spring-ai-started/
+      text: 🔥 关于
+      link: about
     - theme: alt
       text: ⭐ GitHub
       link: https://github.com/dong4j/spring-ai-cookbook
@@ -144,37 +144,6 @@ mvn spring-boot:run
     <div class="resource-desc">Spring AI 中文教程项目</div>
   </a>
 </div>
-
----
-
-<script setup>
-import { VPTeamMembers } from 'vitepress/theme'
-
-const members = [
-  {
-    avatar: 'https://www.github.com/dong4j.png',
-    name: 'dong4j',
-    title: 'Creator',
-    org: 'Zeka.Stack',
-    orgLink: 'https://github.com/zeka-stack',
-    desc: '司机带你开车',
-    // 赞助页面 url
-    sponsor: '',
-    // sponsor 链接的文本，默认为 'Sponsor'
-    actionText: '',
-    links: [
-      { icon: 'github', link: 'https://github.com/dong4j' },
-      { icon: 'twitter', link: 'https://twitter.com/dong4j' }
-    ]
-  },
-]
-</script>
-
-### Our Team
-
-Say hello to our awesome team.
-
-<VPTeamMembers size="medium" :members="members" />
 
 ---
 

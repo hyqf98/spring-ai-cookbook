@@ -63,6 +63,7 @@
 - `chore`: 构建工具或辅助工具的变动
 
 示例：
+
 ```bash
 feat: 添加 OpenAI Chat Model 支持
 fix: 修复 RAG 检索时的空指针异常
@@ -149,10 +150,10 @@ mvn checkstyle:check
 - **代码块**：使用语法高亮，如 ` ```java` 或 ` ```bash`
 - **链接**：使用相对路径链接到其他文档，如 `[快速开始](./1.spring-ai-started/)`
 - **图片**：
-  - 使用相对路径，存储在模块的 `imgs/` 目录下
-  - **必须使用 WebP 格式**，以减少图片体积，提高页面加载速度
-  - 图片路径示例：`![描述](./imgs/example.webp)`
-  - 如果原始图片是其他格式（如 PNG、JPG），请先转换为 WebP 格式
+    - 使用相对路径，存储在模块的 `imgs/` 目录下
+    - **必须使用 WebP 格式**，以减少图片体积，提高页面加载速度
+    - 图片路径示例：`![描述](./imgs/example.webp)`
+    - 如果原始图片是其他格式（如 PNG、JPG），请先转换为 WebP 格式
 - **列表**：使用 `-` 或 `*` 创建无序列表，使用数字创建有序列表
 - **引用**：使用 `>` 创建引用块
 
@@ -181,18 +182,23 @@ import { defineConfig } from 'vite'
 支持的图标类型包括：
 
 **包管理器**：
+
 - `npm`、`yarn`、`pnpm`、`bun`、`deno`
 
 **框架**：
+
 - `vue`、`svelte`、`angular`、`react`、`next`、`nuxt`、`solid`、`astro`、`qwik`、`ember`
 
 **构建工具**：
+
 - `rollup`、`webpack`、`vite`、`esbuild`
 
 **配置文件**：
+
 - `package.json`、`tsconfig.json`、`.npmrc`、`.editorconfig`、`.eslintrc`、`.eslintignore`、`eslint.config`、`.gitignore`、`.gitattributes`、`.env`、`.env.example`、`.vscode`、`tailwind.config`、`uno.config`、`unocss.config`、`.oxlintrc`、`vue.config`
 
 **文件扩展名**：
+
 - `.mts`、`.cts`、`.ts`、`.tsx`、`.mjs`、`.cjs`、`.json`、`.js`、`.jsx`、`.md`、`.py`、`.ico`、`.html`、`.css`、`.scss`、`.yml`、`.yaml`、`.php`、`.gjs`、`.gts`、`.java`、`.xml`
 
 #### 代码组（Code Group）
@@ -574,6 +580,7 @@ public class Application {
 
 - 建议 1
 - 建议 2
+
 ```
 
 ## 🔄 如何同步文档
@@ -646,8 +653,8 @@ Workflow 默认配置为**仅手动触发**，不会在每次提交时自动执�
 
 1. **推送到 `main` 或 `master` 分支**
 2. **变更的文件是任意位置的 README.md**：
-   - 包括项目根目录和所有子模块的 `README.md` 文件
-   - **注意**：修改 workflow 配置文件、`docs/about.md`、或其他文档文件**不会**触发部署
+    - 包括项目根目录和所有子模块的 `README.md` 文件
+    - **注意**：修改 workflow 配置文件、`docs/about.md`、或其他文档文件**不会**触发部署
 3. **提交信息中包含 `[deploy-docs]` 关键词**
 
 > [!重要] 触发条件
@@ -702,10 +709,10 @@ git push origin main
 
 - ✅ **会触发并执行**：修改了任意位置的 `README.md` 文件 + 提交信息包含 `[deploy-docs]` + 推送到 `main`/`master` 分支
 - ❌ **会被忽略**：其他所有情况，包括：
-  - 修改了 `README.md` 但提交信息不包含 `[deploy-docs]`
-  - 修改了 workflow 配置文件（即使提交信息包含 `[deploy-docs]`）
-  - 修改了 `docs/about.md` 或其他文档文件
-  - 修改了代码文件
+    - 修改了 `README.md` 但提交信息不包含 `[deploy-docs]`
+    - 修改了 workflow 配置文件（即使提交信息包含 `[deploy-docs]`）
+    - 修改了 `docs/about.md` 或其他文档文件
+    - 修改了代码文件
 - 🔧 **手动触发**：不受以上限制，随时可以通过 GitHub Actions 页面手动触发
 
 ## 📚 相关资源
@@ -725,6 +732,53 @@ git push origin main
 
 - **Awesome Spring AI**：https://github.com/spring-ai-community/awesome-spring-ai
 - **Spring AI 社区**：https://github.com/spring-ai-community
+
+## 👥 团队成员
+
+感谢以下团队成员对 Spring AI Cookbook 项目的贡献和支持！
+
+<script setup>
+import { VPTeamMembers } from 'vitepress/theme'
+
+const members = [
+  {
+    avatar: 'https://www.github.com/dong4j.png',
+    name: 'dong4j',
+    title: 'Creator',
+    org: 'Zeka.Stack',
+    orgLink: 'https://github.com/zeka-stack',
+    desc: '司机带你开车',
+    links: [
+      { icon: 'github', link: 'https://github.com/dong4j' },
+      { icon: 'twitter', link: 'https://twitter.com/dong4j' }
+    ]
+  },
+  {
+    avatar: 'https://www.github.com/ogromwang.png',
+    name: 'ogromwang',
+    title: 'Developer',
+    org: 'Zeka.Stack',
+    orgLink: 'https://github.com/zeka-stack',
+    desc: '',
+    links: [
+      { icon: 'github', link: 'https://github.com/ogromwang' }
+    ]
+  },
+  {
+    avatar: 'https://www.github.com/hyqf98.png',
+    name: 'hyqf98',
+    title: 'Developer',
+    org: 'Zeka.Stack',
+    orgLink: 'https://github.com/zeka-stack',
+    desc: '',
+    links: [
+      { icon: 'github', link: 'https://github.com/hyqf98' }
+    ]
+  }
+]
+</script>
+
+<VPTeamMembers size="medium" :members="members" />
 
 ## 💬 联系我们
 
