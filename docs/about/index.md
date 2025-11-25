@@ -136,98 +136,33 @@ mvn checkstyle:check
 
 每个模块的文档应包含以下部分：
 
-1. **标题**：清晰描述模块功能
+1. **一级标题**：清晰描述模块功能
 2. **简介**：模块的作用和适用场景
 3. **快速开始**：如何快速运行示例代码
 4. **详细说明**：核心概念和使用方法
-5. **代码示例**：完整的、可运行的代码示例
-6. **最佳实践**：推荐的用法和注意事项
-7. **相关链接**：相关的官方文档或其他模块
+5. **相关链接**：相关的官方文档或其他模块
+6. 其他觉得有必要添加的内容
+
+**一级标题** 将作为教程主页的菜单, (不要超过 20 个字符).
+
+文档在部署时会自动添加 **代码示例**, **贡献者 **和 **页面历史** 3 个二级章节内容.
+
+所以只需要专注教程内容编写, 其他的全部由脚本自动完成.
+
+---
 
 ### Markdown 规范
 
-- **标题层级**：使用 `#` 到 `######`，保持层级清晰
 - **代码块**：使用语法高亮，如 ` ```java` 或 ` ```bash`
-- **链接**：使用相对路径链接到其他文档，如 `[快速开始](./1.spring-ai-started/)`
+- **链接**：使用 **双向链接** 链接到其他文档，比如:  `[[1.spring-ai-started/index|快速开始]] `
 - **图片**：
     - 使用相对路径，存储在模块的 `imgs/` 目录下
-    - **必须使用 WebP 格式**，以减少图片体积，提高页面加载速度
     - 图片路径示例：`![描述](./imgs/example.webp)`
-    - 如果原始图片是其他格式（如 PNG、JPG），请先转换为 WebP 格式
-- **列表**：使用 `-` 或 `*` 创建无序列表，使用数字创建有序列表
-- **引用**：使用 `>` 创建引用块
 
 > 推荐使用 Typora 编辑, 可以设置图片保存路径:
 >
 > ![20251124185628_pa8owW61](./imgs/20251124185628_pa8owW61.webp)
 >
-> 但是 png 转 webp 需要自行处理, 下面提供一段 Linux 脚本:
->
-> ```bash [bash]
-> webp() {
-> input="$1"
-> output="$2"
-> 
-> if [ -z "$input" ]; then
->  echo "Usage: webp <input_file> [output_file]"
->  return 1
-> fi
-> 
-> # 如果没有传第二个参数，自动替换扩展名为 .webp
-> if [ -z "$output" ]; then
->  filename="${input%.*}"   # 去掉扩展名
->  output="${filename}.webp"
-> fi
-> 
-> # 删除元数据
-> exiftool -overwrite_original -all= "$input" > /dev/null 2>&1
-> 
-> # 转为 WebP
-> cwebp -q 50 "$input" -o "$output" > /dev/null 2>&1
-> 
-> echo "convert '$input' to '$output'"
-> }
-> ```
->
-> 使用方式:
-> ```bash [bash]
-> # 1. 传入输入文件和输出文件
-> # 将 a.jpg 转为 a_small.webp
-> webp a.jpg a_small.webp
-> 
-> 
-> # 2. 只传一个参数（最常用）
-> # 输出自动变为同名 .webp，如：
-> # input = "picture.png"
-> # output = "picture.webp"
-> webp picture.png
-> 
-> # 3. 查看提示（不传参数）
-> webp
-> # 输出：Usage: webp <input_file> [output_file]
-> 
-> # 4. 批量转换（结合 shell 的 for 循环）
-> for img in *.jpg; do
->   webp "$img"
-> done
-> # 将当前目录所有 jpg 自动转换为同名 webp
-> ```
->
-> ---
->
-> macOS 需要提前安装 `cwebp`:
->
-> ```bash [bash]
-> brew install webp
-> ```
->
-> [其他系统下载并安装 WebP](https://developers.google.com/speed/webp/download?hl=zh-cn)
->
-> ---
->
-> 如果直接在 IDEA 中编辑, 可以下载 [Markdown Image Kit](https://plugins.jetbrains.com/plugin/12192-markdown-image-kit/new-page) 插件, 提供与 Typora 相同的功能, 且提供 webp 转换:
->
-> ![20251124191629_nl3ufSlJ](./imgs/20251124191629_nl3ufSlJ.webp)
 
 ---
 
@@ -242,38 +177,16 @@ mvn checkstyle:check
 **Markdown 源代码**：
 
 ````markdown
-```js [vite.config.js]
-import { defineConfig } from 'vite'
+```java [java]
+public static void main(String[] args) {}
 ```
 ````
 
 **渲染效果**：
 
-```js [vite.config.js]
-import { defineConfig } from 'vite'
+```java [java]
+public static void main(String[] args) {}
 ```
-
-支持的图标类型包括：
-
-**包管理器**：
-
-- `npm`、`yarn`、`pnpm`、`bun`、`deno`
-
-**框架**：
-
-- `vue`、`svelte`、`angular`、`react`、`next`、`nuxt`、`solid`、`astro`、`qwik`、`ember`
-
-**构建工具**：
-
-- `rollup`、`webpack`、`vite`、`esbuild`
-
-**配置文件**：
-
-- `package.json`、`tsconfig.json`、`.npmrc`、`.editorconfig`、`.eslintrc`、`.eslintignore`、`eslint.config`、`.gitignore`、`.gitattributes`、`.env`、`.env.example`、`.vscode`、`tailwind.config`、`uno.config`、`unocss.config`、`.oxlintrc`、`vue.config`
-
-**文件扩展名**：
-
-- `.mts`、`.cts`、`.ts`、`.tsx`、`.mjs`、`.cjs`、`.json`、`.js`、`.jsx`、`.md`、`.py`、`.ico`、`.html`、`.css`、`.scss`、`.yml`、`.yaml`、`.php`、`.gjs`、`.gts`、`.java`、`.xml`
 
 #### 代码组（Code Group）
 
@@ -420,14 +333,6 @@ sequenceDiagram
     O-->>A: 返回响应
     A-->>U: 返回结果
 ```
-
-```mermaid
-graph LR
-    A[Spring Boot] --> B[Spring AI]
-    B --> C[OpenAI]
-    B --> D[Anthropic]
-    B --> E[Ollama]
-```
 ````
 
 **渲染效果**：
@@ -441,14 +346,6 @@ sequenceDiagram
     A->>O: 调用 Chat API
     O-->>A: 返回响应
     A-->>U: 返回结果
-```
-
-```mermaid
-graph LR
-    A[Spring Boot] --> B[Spring AI]
-    B --> C[OpenAI]
-    B --> D[Anthropic]
-    B --> E[Ollama]
 ```
 
 #### Badge 组件
@@ -514,7 +411,7 @@ public class ChatController {
 **Markdown 源代码**：
 
 ```markdown
-  [[guide/index|Spring AI 简介]]
+[[guide/index|Spring AI 简介]]
 [[1.spring-ai-started/index|快速开始]]
 ```
 
@@ -586,208 +483,210 @@ public class ChatController {
   <img src="https://img.shields.io/badge/-Java-F78C40?logo=OpenJDK&logoColor=FFF" alt="Java" style="display: inline-block;" /> 
 </p>
 
-### 文档位置
+## ✍️ 编写文档
 
-**文档写在各个子模块的 `README.md` 文件中**，例如：
+### 在哪里编写文档
 
+**以数字开头的模块**（如 `1.spring-ai-started`）：
+
+- 不管是单模块还是多模块, 每个代码模块下都 **必须** 有一个 **README.md** 文件, 这个 README.md 文件就是对应章节的教程, 在执行 GitHub Action 时会通过脚本完成自动部署.
+
+- 图片放在 `imgs/` 目录下（支持 PNG、JPG 等格式，部署时会自动转换为 WebP）
+
+**非数字开头的目录**（如 `guide`、`about`）：
+
+- 直接在 `docs/` 目录下编写文档
+
+- 图片放在对应的 `imgs/` 目录下
+
+  > 在 **docs/** 目录中编写文档时, png 转 webp 需要自行处理, 下面提供一段 Linux 脚本:
+  >
+  > ```bash [bash]
+  > webp() {
+  > input="$1"
+  > output="$2"
+  > 
+  > if [ -z "$input" ]; then
+  > echo "Usage: webp <input_file> [output_file]"
+  > return 1
+  > fi
+  > 
+  > # 如果没有传第二个参数，自动替换扩展名为 .webp
+  > if [ -z "$output" ]; then
+  > filename="${input%.*}"   # 去掉扩展名
+  > output="${filename}.webp"
+  > fi
+  > 
+  > # 删除元数据
+  > exiftool -overwrite_original -all= "$input" > /dev/null 2>&1
+  > 
+  > # 转为 WebP
+  > cwebp -q 50 "$input" -o "$output" > /dev/null 2>&1
+  > 
+  > echo "convert '$input' to '$output'"
+  > }
+  > ```
+  >
+  > 使用方式:
+  >
+  > ```bash [bash]
+  > # 1. 传入输入文件和输出文件
+  > # 将 a.jpg 转为 a_small.webp
+  > webp a.jpg a_small.webp
+  > 
+  > 
+  > # 2. 只传一个参数（最常用）
+  > # 输出自动变为同名 .webp，如：
+  > # input = "picture.png"
+  > # output = "picture.webp"
+  > webp picture.png
+  > 
+  > # 3. 查看提示（不传参数）
+  > webp
+  > # 输出：Usage: webp <input_file> [output_file]
+  > 
+  > # 4. 批量转换（结合 shell 的 for 循环）
+  > for img in *.jpg; do
+  > webp "$img"
+  > done
+  > # 将当前目录所有 jpg 自动转换为同名 webp
+  > ```
+  >
+  > ---
+  >
+  > macOS 需要提前安装 `cwebp`:
+  >
+  > ```bash [bash]
+  > brew install webp
+  > ```
+  >
+  > [其他系统下载并安装 WebP](https://developers.google.com/speed/webp/download?hl=zh-cn)
+  >
+  > ---
+  >
+  > 如果直接在 IDEA 中编辑, 可以下载 [Markdown Image Kit](https://plugins.jetbrains.com/plugin/12192-markdown-image-kit/new-page) 插件, 提供与 Typora 相同的功能, 且提供 webp 转换:
+  >
+  > ![20251124191629_nl3ufSlJ](./imgs/20251124191629_nl3ufSlJ.webp)
+
+>
+
+---
+
+```bash{24-44} [bash]
+.
+├── 1.spring-ai-started
+├── 2.spring-ai-chat-client
+├── 3.spring-ai-prompts
+├── 4.spring-ai-structured
+├── 5.spring-ai-multimodality
+├── 6.spring-ai-model
+├── 7.spring-ai-model-chat
+│   └── 7.1.spring-ai-model-chat-openai
+├── 8.spring-ai-model-embedding
+├── 9.spring-ai-model-image
+├── 10.spring-ai-model-audio
+├── 11.spring-ai-model-moderation
+├── 12.spring-ai-model-memory
+├── 13.spring-ai-model-tool-calling
+├── 14.spring-ai-mcp
+├── 15.spring-ai-rag
+├── 16.spring-ai-model-evaluation
+├── 17.spring-ai-vector-database
+├── 18.spring-ai-observability
+├── 19.spring-ai-docker
+├── 20.spring-ai-testcontainer
+└── docs
+    ├── 1.spring-ai-started
+    ├── 2.spring-ai-chat-client
+    ├── 3.spring-ai-prompts
+    ├── 4.spring-ai-structured
+    ├── 5.spring-ai-multimodality
+    ├── 6.spring-ai-model
+    ├── 7.spring-ai-model-chat
+    │   └── 7.1.spring-ai-model-chat-openai
+    ├── 8.spring-ai-model-embedding
+    ├── 9.spring-ai-model-image
+    ├── 10.spring-ai-model-audio
+    ├── 11.spring-ai-model-moderation
+    ├── 12.spring-ai-model-memory
+    ├── 13.spring-ai-model-tool-calling
+    ├── 14.spring-ai-mcp
+    ├── 15.spring-ai-rag
+    ├── 16.spring-ai-model-evaluation
+    ├── 17.spring-ai-vector-database
+    ├── 18.spring-ai-observability
+    ├── 19.spring-ai-docker
+    ├── 20.spring-ai-testcontainer
+    ├── about
+    ├── action
+    ├── guide
+    └── public
 ```
-1.spring-ai-started/
-  ├── README.md          # 文档内容
-  ├── imgs/              # 图片资源（必须使用 WebP 格式）
-  │   ├── example1.webp
-  │   └── example2.webp
-  └── src/               # 源代码
-```
 
-> [!重要] 图片格式要求
-> - 所有图片必须使用 **WebP 格式**（`.webp` 扩展名）
-> - 如果原始图片是其他格式（如 PNG、JPG、JPEG），请先转换为 WebP 格式
-> - WebP 格式可以在保证图片质量的同时显著减少文件体积，提高页面加载速度
+上述高亮显示的目录（`docs/` 下以数字开头的目录）是在部署时由脚本自动生成的。这些目录中的文档来源于对应源码目录下的 `README.md` 文件，属于文档部署时的临时目录，因此已在 `.gitignore` 中忽略，不会提交到代码仓库。
 
-### 文档示例模板
+本项目采用了**代码优先**的设计理念：文档与代码一起维护，源码目录是一等公民，文档作为代码的补充说明。通过脚本和 GitHub Actions 自动将源码目录中的文档同步到 `docs/` 目录，并构建为可访问的文档站点。
 
-```markdown
-# 模块名称
+---
 
-## 📖 简介
+## 📦 文档部署
 
-简要介绍这个模块的功能和作用。
+### GitHub Actions
 
-## 🚀 快速开始
+**触发条件**（需要同时满足）：
 
-### 前置要求
+1. 推送到 `main` 或 `master` 分支
+2. 变更的文件是任意位置的 `README.md`（包括项目根目录和所有子模块）
+3. 提交信息中包含 `@dd` 关键词
 
-- Java 25+
-- Maven 3.8+
-
-### 运行示例
+**使用示例**：
 
 ```bash [bash]
-cd 1.spring-ai-started
-mvn spring-boot:run
+# 修改文档后提交
+git add 1.spring-ai-started/README.md
+git commit -m "更新模块文档 @dd"
+git push origin main
 ```
 
-## 📝 详细说明
+> [!重要] 触发条件
+> 只有**同时满足**以上三个条件，GitHub Actions 才会自动部署。其他情况需要在 GitHub 手动触发。
+>
+> **目前文档是通过 Action 部署到私人服务器上**
 
-...
+### 手动部署
 
-## 💻 代码示例
-
-```java
-@SpringBootApplication
-public class Application {
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
-}
-```
-
-## 🖼️ 图片使用
-
-使用相对路径引用图片，**必须使用 WebP 格式**：
-
-```markdown
-![图片描述](./imgs/example.webp)
-```
-
-## ✨ 最佳实践
-
-- 建议 1
-- 建议 2
-
-```
-
-## 🔄 如何同步文档
-
-文档同步是指将各个子模块的 `README.md` 和图片资源同步到 `docs/` 目录，以便在 VitePress 文档站点中显示。
-
-### 自动同步
-
-使用项目提供的同步脚本：
-
-```bash [bash]
-# 在 docs 目录下执行
-cd docs
-npm run sync
-
-# 或直接执行脚本
-bash sync-docs.sh
-```
-
-### 同步脚本功能
-
-同步脚本会自动完成以下操作：
-
-1. **扫描子模块**：查找所有以数字开头的模块目录（如 `1.spring-ai-started`）
-2. **复制文档**：将 `README.md` 复制为 `docs/<module-name>/index.md`
-3. **同步图片**：将 `imgs/` 目录下的所有图片复制到 `docs/<module-name>/imgs/`
-4. **添加代码链接**：在文档末尾自动添加 GitHub 代码仓库链接
-5. **清理已删除模块**：删除 `docs/` 中已不存在的模块
-
-### 手动同步
-
-如果需要手动同步单个模块：
-
-```bash [bash]
-# 复制文档
-cp 1.spring-ai-started/README.md docs/1.spring-ai-started/index.md
-
-# 复制图片（如果存在）
-cp -r 1.spring-ai-started/imgs docs/1.spring-ai-started/imgs
-```
-
-### 注意事项
-
-- ⚠️ 不要在 `docs/` 目录下直接编辑文档，修改应该在子模块的 `README.md` 中进行
-- ⚠️ **所有图片必须使用 WebP 格式**，图片路径应使用相对路径 `./imgs/xxx.webp`
-- ⚠️ 同步脚本会完全同步 `imgs/` 目录，源目录中删除的图片也会从 `docs/` 中删除
-
-## 🚀 如何执行 GitHub Actions
-
-GitHub Actions 用于自动构建和部署文档站点。了解触发条件非常重要，可以避免不必要的部署或确保文档及时更新。
-
-### 触发方式
-
-**默认配置：仅手动触发（推荐）**
-
-Workflow 默认配置为**仅手动触发**，不会在每次提交时自动执行。这样可以节省 GitHub Actions 运行时间，避免不必要的部署，完全控制部署时机。
-
-**手动触发步骤**：
+**方式一：GitHub Actions 手动触发**
 
 1. 访问项目的 GitHub 仓库：`https://github.com/dong4j/spring-ai-cookbook`
 2. 点击 **Actions** 标签页
 3. 选择 **Deploy Docs to ECS** workflow
 4. 点击 **Run workflow** 按钮
-5. 选择分支（通常是 `main` 或 `master`）
-6. 点击 **Run workflow** 开始执行
+5. 选择分支并执行
 
-### 自动触发条件
+---
 
-如果启用了自动触发，workflow 的触发和执行需要**同时满足**以下三个条件：
+### 本地预览
 
-1. **推送到 `main` 或 `master` 分支**
-2. **变更的文件是任意位置的 README.md**：
-    - 包括项目根目录和所有子模块的 `README.md` 文件
-    - **注意**：修改 workflow 配置文件、`docs/about/index.md`、或其他文档文件**不会**触发部署
-3. **提交信息中包含 `@dd` 关键词**
-
-> [!重要] 触发条件
-> 只有**同时满足**以上三个条件，workflow 才会被触发并执行部署。其他情况都会被忽略。
-
-### 触发示例
-
-**✅ 会触发并执行部署**：
+执行以下命令进行文档构建：
 
 ```bash [bash]
-# 场景 1：修改项目根目录的 README.md
-git add README.md
-git commit -m "更新项目说明 @dd"
-git push origin main
+# 在 docs 目录下执行
+cd docs
 
-# 场景 2：修改子模块的 README.md
-git add 1.spring-ai-started/README.md
-git commit -m "更新模块文档 @dd"
-git push origin main
+# 1. 图片转换和文档同步（自动将图片转换为 WebP 并同步文档）
+bash deploy.sh
 
-# 场景 3：修改了多个子模块的 README.md
-git add 1.spring-ai-started/README.md 2.spring-ai-chat-client/README.md
-git commit -m "更新多个模块文档 @dd"
-git push origin main
+# 2. 构建文档站点
+npm run build
+
+# 3. 预览构建结果（可选）
+npm run preview
 ```
 
-**❌ 不会触发**：
-
-```bash [bash]
-# 场景 1：提交信息缺少 @dd
-git add README.md
-git commit -m "更新项目说明"  # ❌ 缺少 @dd
-git push origin main
-
-# 场景 2：修改了 workflow 配置文件
-git add .github/workflows/deploy-docs.yml
-git commit -m "更新部署配置 @dd"  # ❌ 不是 README.md
-git push origin main
-
-# 场景 3：修改了 docs/about/index.md
-git add docs/about/index.md
-git commit -m "更新关于页面 @dd"  # ❌ 不是 README.md
-git push origin main
-
-# 场景 4：修改了代码文件
-git add src/main/java/App.java
-git commit -m "修复bug @dd"  # ❌ 不是 README.md
-git push origin main
-```
-
-### 工作原理总结
-
-- ✅ **会触发并执行**：修改了任意位置的 `README.md` 文件 + 提交信息包含 `@dd` + 推送到 `main`/`master` 分支
-- ❌ **会被忽略**：其他所有情况，包括：
-    - 修改了 `README.md` 但提交信息不包含 `@dd`
-    - 修改了 workflow 配置文件（即使提交信息包含 `@dd`）
-    - 修改了 `docs/about/index.md` 或其他文档文件
-    - 修改了代码文件
-- 🔧 **手动触发**：不受以上限制，随时可以通过 GitHub Actions 页面手动触发
+> [!注意] 文档位置
+>
+> - **不要直接在 `docs/` 目录下编辑以数字开头的模块文档**，这些文档会从源码目录自动同步，修改会被覆盖
+> - 非数字开头的目录（如 `guide`、`about`）可以直接在 `docs/` 目录下编辑
 
 ## 📚 相关资源
 
