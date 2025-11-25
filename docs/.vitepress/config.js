@@ -102,7 +102,7 @@ function findModules(dir, basePath = '') {
 }
 
 /**
- * 将模块分类
+ * 基于模块编号进行分类, 用于自动生成菜单
  */
 function categorizeModules(modules) {
   const categorized = {}
@@ -115,12 +115,7 @@ function categorizeModules(modules) {
 
     const num = parseInt(moduleNum)
 
-    // 跳过 num === 0 的模块（如果存在），因为它会单独处理
-    // 注意：guide 等目录不是以数字开头的，不会出现在模块列表中
-    if (num === 0) {
-      continue
-    }
-
+    // 注意：guide 等不是以数字开头的目录，不会出现在模块列表中
     let category = '其他'
     if (num <= 2) {
       category = '入门'
@@ -144,24 +139,107 @@ function categorizeModules(modules) {
 }
 
 /**
- * 获取 guide 模块信息
+ * 获取文档的一级标题
  */
-function getGuideModule() {
-  const introPath = path.join(docsDir, 'guide')
-  const indexPath = path.join(introPath, 'index.md')
+function getDocumentTitle(filePath) {
+  if (!fs.existsSync(filePath)) {
+    return null
+  }
+  const content = fs.readFileSync(filePath, 'utf-8')
+  const match = content.match(/^#\s+(.+)$/m)
+  if (match) {
+    return match[1].trim()
+  }
+  return path.basename(filePath, path.extname(filePath))
+}
 
-  if (fs.existsSync(indexPath)) {
-    const displayName = getModuleDisplayName(introPath)
-    return {
-      text: displayName,
-      link: '/guide/'
+/**
+ * 获取指定目录下的所有文档，用于生成菜单项
+ * @param {string} dirName - 目录名称（如 'guide', 'about', 'action'）
+ * @returns {Array} 菜单项数组
+ */
+function getDirectoryItems(dirName) {
+  const dirPath = path.join(docsDir, dirName)
+  const items = []
+
+  if (!fs.existsSync(dirPath)) {
+    return items
+  }
+
+  // 读取目录下的所有文件
+  const files = fs.readdirSync(dirPath, {withFileTypes: true})
+
+  for (const file of files) {
+    // 只处理 .md 文件
+    if (!file.isFile() || !file.name.endsWith('.md')) {
+      continue
+    }
+
+    const filePath = path.join(dirPath, file.name)
+    let link = ''
+    let sortKey = 0
+
+    if (file.name === 'index.md') {
+      // index.md 作为特殊处理，链接为 /目录名/，排序为 0
+      link = `/${dirName}/`
+      sortKey = 0
+    } else {
+      // 其他文件按编号排序，如 1.introduction.md -> /目录名/1.introduction
+      const match = file.name.match(/^(\d+)\.(.+)\.md$/)
+      if (match) {
+        const num = parseInt(match[1])
+        link = `/${dirName}/${file.name.replace(/\.md$/, '')}`
+        sortKey = num
+      } else {
+        // 如果没有编号前缀，使用文件名（去掉 .md）作为链接，排序到最后
+        const baseName = file.name.replace(/\.md$/, '')
+        link = `/${dirName}/${baseName}`
+        sortKey = 9999 // 无编号的文件排到最后
+      }
+    }
+
+    const title = getDocumentTitle(filePath)
+    if (title) {
+      items.push({
+                   text: title,
+                   link: link,
+                   sortKey: sortKey
+                 })
     }
   }
-  return null
+
+  // 按 sortKey 排序
+  items.sort((a, b) => a.sortKey - b.sortKey)
+
+  return items.map(item => (
+      {
+        text: item.text,
+        link: item.link
+      }))
+}
+
+/**
+ * 添加目录菜单到侧边栏（辅助函数）
+ * @param {Object} sidebar - 侧边栏配置对象
+ * @param {string} menuText - 菜单标题（如 '简介', '关于', '实战'）
+ * @param {string} dirName - 目录名称（如 'guide', 'about', 'action'）
+ */
+function addDirectoryMenu(sidebar, menuText, dirName) {
+  const items = getDirectoryItems(dirName)
+  if (items.length > 0) {
+    sidebar['/'].push({
+                        text: menuText,
+                        items: items
+                      })
+  }
 }
 
 /**
  * 生成侧边栏配置
+ * 1. 首先添加 guide 目录菜单
+ * 2. 然后按分类添加其他目录菜单
+ * 3. 最后添加"关于"菜单
+ * 后续可以参考 about 目录添加其他目录菜单, 菜单的顺序就是 addDirectoryMenu 执行的顺序,
  */
 function generateSidebar() {
   const allModules = findModules(docsDir)
@@ -171,23 +249,13 @@ function generateSidebar() {
     '/': []
   }
 
-  const categoryOrder = ['简介', '入门', '核心功能', 'Model API', '高级功能', '部署与测试']
+  const categoryOrder = ['入门', '核心功能', 'Model API', '高级功能', '部署与测试']
 
-  // 单独处理"简介"分类
-  const introModule = getGuideModule()
-  if (introModule) {
-    sidebar['/'].push({
-                        text: '简介',
-                        items: [introModule]
-                      })
-  }
+  // 单独处理 "简介" 分类
+  addDirectoryMenu(sidebar, '简介', 'guide')
 
-  // 处理其他分类（排除"简介"，因为已经单独处理了）
+  // 根据源码目录中的 README.md 动态生成的菜单, 不需要动. 添加新的目录菜单时, 使用 addDirectoryMenu(sidebar, '菜单名称', '目录名')
   for (const category of categoryOrder) {
-    if (category === '简介') {
-      continue
-    }
-
     if (categorized[category] && categorized[category].length > 0) {
       sidebar['/'].push({
                           text: category,
@@ -196,16 +264,10 @@ function generateSidebar() {
     }
   }
 
-  // 在最后添加"关于"菜单
-  sidebar['/'].push({
-                      text: '关于',
-                      items: [
-                        {
-                          text: '关于这个项目',
-                          link: '/about/'
-                        }
-                      ]
-                    })
+  // 添加 "关于`" 菜单
+  addDirectoryMenu(sidebar, '关于', 'about')
+  // 添加 "实战" 菜单
+  addDirectoryMenu(sidebar, '实战', 'action')
 
   return sidebar
 }
@@ -332,7 +394,7 @@ export default defineConfig(
         ],
 
         footer: {
-          message: '基于 Spring AI 构建',
+          message: '基于 VitePress 构建',
           copyright: 'Copyright © 2025 Spring AI Cookbook'
         },
 
