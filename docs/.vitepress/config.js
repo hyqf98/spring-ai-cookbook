@@ -102,6 +102,48 @@ function findModules(dir, basePath = '') {
 }
 
 /**
+ * 模块分类配置
+ * key: 分类名称
+ * value: 最大模块编号（包含），用于判断模块属于哪个分类
+ */
+const CATEGORY_CONFIG = {
+  // <= 2 的都属于"入门"
+  '入门': 2,
+  // <= 5 的都属于"核心功能"
+  '核心功能': 5,
+  // <= 13 的都属于"Model API"
+  'Model API': 13,
+  // <= 18 的都属于"高级功能"
+  '高级功能': 18,
+  // 大于 18 的都属于"部署与测试"
+  '部署与测试': Infinity
+}
+
+/**
+ * 根据模块编号获取分类名称
+ * @param {number} num - 模块编号
+ * @returns {string} 分类名称
+ */
+function getCategoryByModuleNum(num) {
+  // 遍历配置，找到第一个匹配的分类
+  for (const [categoryName, maxNum] of Object.entries(CATEGORY_CONFIG)) {
+    if (num <= maxNum) {
+      return categoryName
+    }
+  }
+  // 理论上不会到达这里，因为最后一个分类是 Infinity
+  return Object.keys(CATEGORY_CONFIG).slice(-1)[0]
+}
+
+/**
+ * 获取分类顺序数组（用于菜单显示顺序）
+ * @returns {Array<string>} 分类名称数组
+ */
+function getCategoryOrder() {
+  return Object.keys(CATEGORY_CONFIG)
+}
+
+/**
  * 基于模块编号进行分类, 用于自动生成菜单
  */
 function categorizeModules(modules) {
@@ -114,20 +156,8 @@ function categorizeModules(modules) {
     }
 
     const num = parseInt(moduleNum)
-
     // 注意：guide 等不是以数字开头的目录，不会出现在模块列表中
-    let category = '其他'
-    if (num <= 2) {
-      category = '入门'
-    } else if (num <= 5) {
-      category = '核心功能'
-    } else if (num <= 13) {
-      category = 'Model API'
-    } else if (num <= 18) {
-      category = '高级功能'
-    } else {
-      category = '部署与测试'
-    }
+    const category = getCategoryByModuleNum(num)
 
     if (!categorized[category]) {
       categorized[category] = []
@@ -249,7 +279,7 @@ function generateSidebar() {
     '/': []
   }
 
-  const categoryOrder = ['入门', '核心功能', 'Model API', '高级功能', '部署与测试']
+  const categoryOrder = getCategoryOrder()
 
   // 单独处理 "简介" 分类
   addDirectoryMenu(sidebar, '简介', 'guide')
