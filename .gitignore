@@ -19,6 +19,7 @@ buildNumber.properties
 .settings/
 .classpath
 .project
+.flattened-pom.xml
 
 # AI
 .cursorrules

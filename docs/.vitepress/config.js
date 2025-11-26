@@ -459,6 +459,7 @@ export default defineConfig(
         nav: [
           {text: '🏠 首页', link: '/'},
           {text: '🚀 开始', link: '/1.spring-ai-started/'},
+          {text: '📝 更新日志', link: '/changelog'},
           {text: '📊 统计', link: 'https://umami.dong4j.site/share/o0wIhLdP1EwFcdCt/spring-ai.dong4j.site', target: '_blank'}
         ],
 
