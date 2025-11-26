@@ -134,7 +134,8 @@
                             JVM 参数说明：
                             1. @{argLine}: 保留其他插件（如 JaCoCo）可能添加的参数
                             2. -XX:+EnableDynamicAgentLoading: 允许 Mockito 在运行时动态加载 Java agent
-                            3. -add-opens: 开放 Java 内部 API 访问权限，避免模块系统限制产生的警告
+                            3. -Xshare:off: 禁用类数据共享（CDS），避免 bootstrap classpath 修改导致的警告
+                            4. add-opens: 开放 Java 内部 API 访问权限，避免模块系统限制产生的警告
                                - java.base/sun.nio.ch=ALL-UNNAMED: 开放 sun.nio.ch 包给未命名模块
                                - java.base/java.io=ALL-UNNAMED: 开放 java.io 包给未命名模块
                             这些配置是 Java 9+ 模块系统下运行测试框架（Mockito、ByteBuddy）的标准做法
@@ -142,6 +143,7 @@
                         <argLine>
                             @{argLine}
                             -XX:+EnableDynamicAgentLoading
+                            -Xshare:off
                             --add-opens java.base/sun.nio.ch=ALL-UNNAMED
                             --add-opens java.base/java.io=ALL-UNNAMED
                         </argLine>

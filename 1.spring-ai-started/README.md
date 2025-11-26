@@ -18,6 +18,19 @@
 
 ## Chat Client API
 
+Chat Client API 是 Spring AI 提供的高级 API,它简化了与 AI 模型的交互流程。相比于直接使用底层的 `ChatModel` 接口,`ChatClient` 提供了更加流畅和易用的 API 设计。
+
+### 核心特性
+
+- **流式 API 设计**: 使用链式调用构建对话请求,代码更加简洁易读
+- **自动装配**: Spring Boot 会根据配置自动创建相应的 `ChatModel` 实例
+- **灵活配置**: 支持通过配置文件灵活切换不同的 AI 模型提供商
+- **统一接口**: 屏蔽了不同 AI 服务商的差异,提供统一的编程体验
+
+### 基本用法
+
+下面通过一个简单示例来演示如何使用 Chat Client API:
+
 ::: code-group
 
 ```xml [xml:添加依赖]
@@ -39,26 +52,37 @@ spring:
 ```
 
 ```java [java:修改启动类]
-@EnableAutoConfiguration
-public class StartedApplication {
-    public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(StartedApplication.class);
-        app.setWebApplicationType(WebApplicationType.NONE);
-        ConfigurableApplicationContext ctx = app.run(args);
+@Service
+public class SimpleChatClientExample {
 
-        // spring-ai-starter-model-openai 自动注入了 OpenAiChatModel
-        OpenAiChatModel chatModel = ctx.getBean(OpenAiChatModel.class);
-        ChatClient client = ChatClient.create(chatModel);
+    private final ChatClient chatClient;
 
-        String reply = client.prompt("我说 ping, 你说 pong").call().content();
-        System.out.println("AI 回复: " + reply);
-        ctx.close();
+    public SimpleChatClientExample(ChatClient.Builder chatClientBuilder) {
+        this.chatClient = chatClientBuilder.build();
+    }
+
+    public String chat(String userMessage) {
+        return chatClient.prompt().user(userMessage).call().content();
     }
 }
+
 ```
 
-```sh [sh:运行]
-AI 回复: pong! 😊 你想玩什么其他有趣的游戏吗？
+```java [java:测试用例]
+@SpringBootTest
+class SimpleChatClientExampleTest {
+
+    @Resource
+    private SimpleChatClientExample chatClientExample;
+
+    @Test
+    void testChat() {
+        String response = chatClientExample.chat("你好");
+        assertThat(response).isNotNull();
+        assertThat(response).isNotEmpty();
+        System.out.println("AI 回复: " + response);
+    }
+}
 ```
 
 :::
