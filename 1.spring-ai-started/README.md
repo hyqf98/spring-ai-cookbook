@@ -29,7 +29,7 @@ Chat Client API 是 Spring AI 提供的高级 API,它简化了与 AI 模型的�
 
 ### 基本用法
 
-下面通过一个简单示例来演示如何使用 Chat Client API:
+[SimpleChatClientExampleTest](https://github.com/dong4j/spring-ai-cookbook/blob/main/1.spring-ai-started/src/test/java/dev/dong4j/ai/spring/chatclient/SimpleChatClientExampleTest.java)
 
 ::: code-group
 
@@ -99,52 +99,99 @@ class SimpleChatClientExampleTest {
 
 ### 基本用法
 
+[PromptExampleTest](https://github.com/dong4j/spring-ai-cookbook/blob/main/1.spring-ai-started/src/test/java/dev/dong4j/ai/spring/chatclient/PromptExampleTest.java)
+
 ::: code-group
 
 ```java [java:简单提示词]
-ChatClient client = ChatClient.create(chatModel);
+@Service
+public class PromptExample {
 
-// 最简单的用法：直接传入用户消息
-String reply = client.prompt("你好，请介绍一下 Spring AI")
-    .call()
-    .content();
+    private final ChatClient chatClient;
+
+    public PromptExample(ChatClient.Builder chatClientBuilder) {
+        this.chatClient = chatClientBuilder.build();
+    }
+
+    public String simplePrompt(String userMessage) {
+        return chatClient.prompt(userMessage).call().content();
+    }
+}
 ```
 
 ```java [java:使用 System 提示词]
-ChatClient client = ChatClient.create(chatModel);
-
-// 设置系统提示词，定义 AI 的角色和行为
-String reply = client.prompt()
-    .system("你是一个专业的 Java 开发工程师，擅长 Spring 框架。")
-    .user("请解释一下 Spring AI 的核心概念")
-    .call()
-    .content();
+public String promptWithSystem(String userMessage) {
+    return chatClient
+        .prompt()
+        .system("你是一个专业的 Java 开发工程师，擅长 Spring 框架。请用一句话回答问题。")
+        .user(userMessage)
+        .call()
+        .content();
+}
 ```
 
 ```java [java:提示词模板]
-ChatClient client = ChatClient.create(chatModel);
-
-// 使用模板变量，运行时替换
-String reply = client.prompt()
-    .user(u -> u
-        .text("请用 {language} 语言解释 {topic} 的核心概念")
-        .param("language", "中文")
-        .param("topic", "Spring AI"))
-    .call()
-    .content();
+public String promptWithTemplate(String language, String topic) {
+    return chatClient
+        .prompt()
+        .user(u -> u
+            .text("用 {language} 一句话解释 {topic}")
+            .param("language", language)
+            .param("topic", topic))
+        .call()
+        .content();
+}
 ```
 
-```java [java:多轮对话]
-ChatClient client = ChatClient.create(chatModel);
+```java [java:复杂模板]
+public String complexTemplate(String product, String targetAudience, String feature) {
+    return chatClient
+        .prompt()
+        .user(u -> u
+            .text("用一句话介绍 {product}，面向 {targetAudience}，突出 {feature}")
+            .param("product", product)
+            .param("targetAudience", targetAudience)
+            .param("feature", feature))
+        .call()
+        .content();
+}
+```
 
-// 构建多轮对话上下文
-String reply = client.prompt()
-    .system("你是一个友好的助手")
-    .user("我的名字是张三")
-    .assistant("你好，张三！很高兴认识你。")
-    .user("请记住我的名字，下次见面时用这个名字称呼我")
-    .call()
-    .content();
+```java [java:测试用例]
+@SpringBootTest
+class PromptExampleTest {
+
+    @Autowired
+    private PromptExample promptExample;
+
+    @Test
+    void testSimplePrompt() {
+        String response = promptExample.simplePrompt("用一句话介绍 Spring AI");
+        assertThat(response).isNotNull();
+        System.out.println("简单提示词 - AI 回复: " + response);
+    }
+
+    @Test
+    void testPromptWithSystem() {
+        String response = promptExample.promptWithSystem("Spring AI 是什么?");
+        assertThat(response).contains("Spring");
+        System.out.println("系统提示词 - AI 回复: " + response);
+    }
+
+    @Test
+    void testPromptWithTemplate() {
+        String response = promptExample.promptWithTemplate("中文", "ChatClient");
+        assertThat(response).isNotEmpty();
+        System.out.println("提示词模板 - AI 回复: " + response);
+    }
+
+    @Test
+    void testComplexTemplate() {
+        String response = promptExample.complexTemplate("ChatClient", "开发者", "简单易用");
+        assertThat(response).isNotEmpty();
+        System.out.println("复杂模板 - AI 回复: " + response);
+    }
+}
 ```
 
 :::
@@ -154,14 +201,17 @@ String reply = client.prompt()
 Spring AI 默认使用 [StringTemplate](https://www.stringtemplate.org/) 引擎处理模板，变量使用 `{变量名}` 语法：
 
 ```java
-String reply = client.prompt()
-    .user(u -> u
-        .text("请为 {product} 写一份产品介绍，目标用户是 {targetAudience}，重点突出 {feature}")
-        .param("product", "Spring AI")
-        .param("targetAudience", "Java 开发者")
-        .param("feature", "易于集成"))
-    .call()
-    .content();
+public String complexTemplate(String product, String targetAudience, String feature) {
+    return chatClient
+        .prompt()
+        .user(u -> u
+            .text("用一句话介绍 {product}，面向 {targetAudience}，突出 {feature}")
+            .param("product", product)
+            .param("targetAudience", targetAudience)
+            .param("feature", feature))
+        .call()
+        .content();
+}
 ```
 
 ### 自定义模板分隔符
@@ -185,17 +235,10 @@ String reply = client.prompt()
     .content();
 ```
 
-### 提示词管理最佳实践
-
-1. **集中管理提示词模板**：将常用的提示词模板提取到配置类或资源文件中
-2. **使用 System 提示词定义角色**：通过 `system()` 方法设置 AI 的角色和行为规范
-3. **参数化提示词**：使用模板变量提高提示词的复用性和灵活性
-4. **构建多轮对话**：使用 `user()` 和 `assistant()` 方法构建完整的对话上下文
-
 ### 参考文档
 
 - [Spring AI ChatClient 官方文档](https://docs.spring.io/spring-ai/reference/api/chatclient.html)
-- [StringTemplate 引擎文档](https://www.stringtemplate.org/)
+- [[StringTemplate|StringTemplate 引擎]]
 
 ## 结构化输出
 
