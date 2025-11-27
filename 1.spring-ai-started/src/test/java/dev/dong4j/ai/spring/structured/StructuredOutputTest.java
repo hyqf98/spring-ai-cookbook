@@ -1,28 +1,30 @@
 package dev.dong4j.ai.spring.structured;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import jakarta.annotation.Resource;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import jakarta.annotation.Resource;
 import reactor.core.publisher.Flux;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 结构化输出测试类
  *
  * <p>测试 Spring AI 的结构化输出功能，包括：
+ *
  * <ul>
- *   <li>使用 entity() 方法返回 Java 对象</li>
- *   <li>返回 List 类型</li>
- *   <li>使用 BeanOutputConverter</li>
- *   <li>流式响应转结构化</li>
+ *   <li>使用 entity() 方法返回 Java 对象
+ *   <li>返回 List 类型
+ *   <li>使用 BeanOutputConverter
+ *   <li>流式响应转结构化
  * </ul>
  *
  * @author zeka.stack.team
@@ -34,20 +36,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class StructuredOutputTest {
 
-    @Resource
-    private ChatClient.Builder chatClientBuilder;
+    @Resource private ChatClient.Builder chatClientBuilder;
 
-    /**
-     * 演员电影记录类
-     */
-    record ActorFilms(String actor, List<String> movies) {
-    }
+    /** 演员电影记录类 */
+    record ActorFilms(String actor, List<String> movies) {}
 
-    /**
-     * 产品记录类
-     */
-    record Product(String name, String description, Double price, List<String> features) {
-    }
+    /** 产品记录类 */
+    record Product(String name, String description, Double price, List<String> features) {}
 
     /**
      * 测试：使用 entity() 方法返回 Java 对象
@@ -59,10 +54,8 @@ class StructuredOutputTest {
         ChatClient client = chatClientBuilder.build();
 
         // 直接返回 Java 对象
-        ActorFilms result = client.prompt()
-            .user("生成一个随机演员的电影作品列表，返回 JSON 格式")
-            .call()
-            .entity(ActorFilms.class);
+        ActorFilms result =
+                client.prompt().user("生成一个随机演员的电影作品列表，返回 JSON 格式").call().entity(ActorFilms.class);
 
         assertThat(result).isNotNull();
         assertThat(result.actor()).isNotNull().isNotEmpty();
@@ -82,20 +75,21 @@ class StructuredOutputTest {
         ChatClient client = chatClientBuilder.build();
 
         // 返回 List 需要使用 ParameterizedTypeReference
-        List<ActorFilms> results = client.prompt()
-            .user("生成 3 个演员的电影作品列表，包括 Tom Hanks 和 Bill Murray，返回 JSON 数组格式")
-            .call()
-            .entity(new ParameterizedTypeReference<>() {
-            });
+        List<ActorFilms> results =
+                client.prompt()
+                        .user("生成 3 个演员的电影作品列表，包括 Tom Hanks 和 Bill Murray，返回 JSON 数组格式")
+                        .call()
+                        .entity(new ParameterizedTypeReference<>() {});
 
         assertThat(results).isNotNull().isNotEmpty();
         assertThat(results.size()).isGreaterThanOrEqualTo(1);
 
-        results.forEach(actor -> {
-            assertThat(actor.actor()).isNotNull().isNotEmpty();
-            assertThat(actor.movies()).isNotNull().isNotEmpty();
-            System.out.println(actor.actor() + ": " + actor.movies());
-        });
+        results.forEach(
+                actor -> {
+                    assertThat(actor.actor()).isNotNull().isNotEmpty();
+                    assertThat(actor.movies()).isNotNull().isNotEmpty();
+                    System.out.println(actor.actor() + ": " + actor.movies());
+                });
     }
 
     /**
@@ -110,16 +104,15 @@ class StructuredOutputTest {
 
         // 在提示词中包含格式说明
         String format = converter.getFormat();
-        String prompt = """
-            请为 Spring AI 创建一个产品介绍。
-            格式要求：
-            %s
-            """.formatted(format);
+        String prompt =
+                """
+                请为 Spring AI 创建一个产品介绍。
+                格式要求：
+                %s
+                """
+                        .formatted(format);
 
-        Product product = client.prompt()
-            .user(prompt)
-            .call()
-            .entity(Product.class);
+        Product product = client.prompt().user(prompt).call().entity(Product.class);
 
         assertThat(product).isNotNull();
         assertThat(product.name()).isNotNull().isNotEmpty();
@@ -142,22 +135,21 @@ class StructuredOutputTest {
     void testStreamToStructured() {
         ChatClient client = chatClientBuilder.build();
         BeanOutputConverter<List<ActorFilms>> converter =
-            new BeanOutputConverter<>(new ParameterizedTypeReference<>() {
-            });
+                new BeanOutputConverter<>(new ParameterizedTypeReference<>() {});
 
         // 流式获取响应
-        Flux<String> flux = client.prompt()
-            .user(u -> u
-                .text("生成 2 个演员的电影作品列表。格式要求：\n{format}")
-                .param("format", converter.getFormat()))
-            .stream()
-            .content();
+        Flux<String> flux =
+                client
+                        .prompt()
+                        .user(
+                                u ->
+                                        u.text("生成 2 个演员的电影作品列表。格式要求：\n{format}")
+                                                .param("format", converter.getFormat()))
+                        .stream()
+                        .content();
 
         // 聚合流式响应并转换
-        String content = flux.collectList()
-            .block()
-            .stream()
-            .collect(Collectors.joining());
+        String content = flux.collectList().block().stream().collect(Collectors.joining());
 
         assertThat(content).isNotNull().isNotEmpty();
 
@@ -166,11 +158,11 @@ class StructuredOutputTest {
         assertThat(results).isNotNull().isNotEmpty();
         assertThat(results.size()).isGreaterThanOrEqualTo(1);
 
-        results.forEach(actor -> {
-            assertThat(actor.actor()).isNotNull().isNotEmpty();
-            assertThat(actor.movies()).isNotNull().isNotEmpty();
-            System.out.println(actor.actor() + ": " + actor.movies());
-        });
+        results.forEach(
+                actor -> {
+                    assertThat(actor.actor()).isNotNull().isNotEmpty();
+                    assertThat(actor.movies()).isNotNull().isNotEmpty();
+                    System.out.println(actor.actor() + ": " + actor.movies());
+                });
     }
 }
-

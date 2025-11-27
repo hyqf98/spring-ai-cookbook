@@ -49,11 +49,11 @@ public class PromptExample {
      */
     public String promptWithSystem(String userMessage) {
         return chatClient
-            .prompt()
-            .system("你是一个专业的 Java 开发工程师，擅长 Spring 框架。请用一句话回答问题。")
-            .user(userMessage)
-            .call()
-            .content();
+                .prompt()
+                .system("你是一个专业的 Java 开发工程师，擅长 Spring 框架。请用一句话回答问题。")
+                .user(userMessage)
+                .call()
+                .content();
     }
 
     /**
@@ -62,19 +62,19 @@ public class PromptExample {
      * <p>使用模板变量，运行时替换
      *
      * @param language 语言
-     * @param topic    主题
+     * @param topic 主题
      * @return AI 回复内容
      */
     public String promptWithTemplate(String language, String topic) {
         return chatClient
-            .prompt()
-            .user(
-                u ->
-                    u.text("用 {language} 一句话解释 {topic}")
-                        .param("language", language)
-                        .param("topic", topic))
-            .call()
-            .content();
+                .prompt()
+                .user(
+                        u ->
+                                u.text("用 {language} 一句话解释 {topic}")
+                                        .param("language", language)
+                                        .param("topic", topic))
+                .call()
+                .content();
     }
 
     /**
@@ -87,11 +87,14 @@ public class PromptExample {
      */
     public String customDelimiterTemplate(String code) {
         return chatClient
-            .prompt()
-            .user(u -> u.text("请用一句话审查以下代码: <code>").param("code", "public class Test { }"))
-            .templateRenderer(
-                StTemplateRenderer.builder().startDelimiterToken('<').endDelimiterToken('>').build())
-            .call()
-            .content();
+                .prompt()
+                .user(u -> u.text("请用一句话审查以下代码: <code>").param("code", "public class Test { }"))
+                .templateRenderer(
+                        StTemplateRenderer.builder()
+                                .startDelimiterToken('<')
+                                .endDelimiterToken('>')
+                                .build())
+                .call()
+                .content();
     }
 }

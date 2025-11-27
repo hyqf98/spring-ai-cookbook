@@ -1,11 +1,11 @@
 package dev.dong4j.ai.spring.prompt;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.annotation.Resource;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * PromptExample 测试类
@@ -21,8 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class PromptExampleTest {
 
-    @Resource
-    private PromptExample promptExample;
+    @Resource private PromptExample promptExample;
 
     /** 测试简单提示词功能 */
     @Test

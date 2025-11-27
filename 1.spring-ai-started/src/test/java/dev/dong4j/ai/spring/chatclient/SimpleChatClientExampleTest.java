@@ -1,11 +1,11 @@
 package dev.dong4j.ai.spring.chatclient;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.annotation.Resource;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * SimpleChatClientExample 测试类
@@ -21,8 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class SimpleChatClientExampleTest {
 
-    @Resource
-    private SimpleChatClientExample chatClientExample;
+    @Resource private SimpleChatClientExample chatClientExample;
 
     /** 测试简单对话功能 */
     @Test

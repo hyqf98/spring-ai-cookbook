@@ -1,5 +1,13 @@
 package dev.dong4j.ai.spring.prompt;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import org.junit.jupiter.api.Test;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -8,14 +16,6 @@ import org.stringtemplate.v4.STGroupString;
 
 import java.util.Arrays;
 import java.util.List;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * StringTemplate 使用示例测试，确保示例代码可运行并便于回归。
@@ -82,12 +82,12 @@ class StringTemplateDemoTest {
         ST audit = group.getInstanceOf("audit");
         // 这里会抛出异常，因为 {code} 和 {language} 没有被识别为变量
         assertThrows(
-            IllegalArgumentException.class,
-            () -> {
-                audit.add("code", "public class Test {}");
-                audit.add("language", "中文");
-                audit.render();
-            });
+                IllegalArgumentException.class,
+                () -> {
+                    audit.add("code", "public class Test {}");
+                    audit.add("language", "中文");
+                    audit.render();
+                });
     }
 
     // ========== 额外示例：使用 STGroupString ==========
@@ -96,7 +96,7 @@ class StringTemplateDemoTest {
     void renderTemplateFromGroupString() {
         // 使用 STGroupString 定义模板
         STGroupString group =
-            new STGroupString("audit(code, language) ::= <<请审查 <code>，并用 <language> 给出结果。>>");
+                new STGroupString("audit(code, language) ::= <<请审查 <code>，并用 <language> 给出结果。>>");
 
         ST audit = group.getInstanceOf("audit");
         audit.add("code", "public class Test {}");
@@ -185,11 +185,12 @@ class StringTemplateDemoTest {
     void renderConditionalTemplate() {
         // 条件渲染：使用 if/else 语法
         STGroupString group =
-            new STGroupString(
-                """
-                    greeting(isVip, name) ::= <<
-                    <if(isVip)>尊敬的 VIP 用户 <name>，<else>用户 <name>，<endif>欢迎！
-                    >>""");
+                new STGroupString(
+                        """
+                        greeting(isVip, name) ::= <<
+                        <if(isVip)>尊敬的 VIP 用户 <name>，<else>用户 <name>，<endif>欢迎！
+                        >>\
+                        """);
 
         ST template = group.getInstanceOf("greeting");
         template.add("isVip", true);
@@ -203,11 +204,12 @@ class StringTemplateDemoTest {
     void renderConditionalTemplate_false() {
         // 条件渲染：false 分支
         STGroupString group =
-            new STGroupString(
-                """
-                    greeting(isVip, name) ::= <<
-                    <if(isVip)>尊敬的 VIP 用户 <name>，<else>用户 <name>，<endif>欢迎！
-                    >>""");
+                new STGroupString(
+                        """
+                        greeting(isVip, name) ::= <<
+                        <if(isVip)>尊敬的 VIP 用户 <name>，<else>用户 <name>，<endif>欢迎！
+                        >>\
+                        """);
 
         ST template = group.getInstanceOf("greeting");
         template.add("isVip", false);
@@ -237,15 +239,15 @@ class StringTemplateDemoTest {
     void renderNestedTemplate() {
         // 嵌套模板：主模板调用子模板
         STGroupString group =
-            new STGroupString(
-                """
-                    main(title, items) ::= <<标题：<title>
-                    <itemList(items)>
-                    >>
-                    itemList(items) ::= <<项目列表：
-                    <items:{item | - <item>}; separator=", ">
-                    >>
-                    """);
+                new STGroupString(
+                        """
+                        main(title, items) ::= <<标题：<title>
+                        <itemList(items)>
+                        >>
+                        itemList(items) ::= <<项目列表：
+                        <items:{item | - <item>}; separator=", ">
+                        >>
+                        """);
 
         ST template = group.getInstanceOf("main");
         template.add("title", "待办事项");
@@ -343,9 +345,10 @@ class StringTemplateDemoTest {
     void renderWithDefaultValue() {
         // 默认值：使用 if/else 实现默认值逻辑
         STGroupString group =
-            new STGroupString(
-                """
-                    userRole(name, role) ::= <<用户 <name> 的角色是 <if(role)><role><else>普通用户<endif>。>>""");
+                new STGroupString(
+                        """
+                        userRole(name, role) ::= <<用户 <name> 的角色是 <if(role)><role><else>普通用户<endif>。>>\
+                        """);
 
         ST template = group.getInstanceOf("userRole");
         template.add("name", "张三");
@@ -359,9 +362,10 @@ class StringTemplateDemoTest {
     void renderWithDefaultValue_provided() {
         // 默认值：如果属性存在，使用提供的值
         STGroupString group =
-            new STGroupString(
-                """
-                    userRole(name, role) ::= <<用户 <name> 的角色是 <if(role)><role><else>普通用户<endif>。>>""");
+                new STGroupString(
+                        """
+                        userRole(name, role) ::= <<用户 <name> 的角色是 <if(role)><role><else>普通用户<endif>。>>\
+                        """);
 
         ST template = group.getInstanceOf("userRole");
         template.add("name", "张三");
@@ -431,19 +435,19 @@ class StringTemplateDemoTest {
         // 复杂场景：列表 + 条件 + 嵌套
         // 使用 if/else 语法处理条件渲染
         STGroupString group =
-            new STGroupString(
-                """
-                    report(title, items, isDetailed, itemCount) ::= <<报告：<title>
-                    <if(isDetailed)>
-                    <itemList(items)>
-                    <else>
-                    共 <itemCount> 项
-                    <endif>
-                    >>
-                    itemList(items) ::= <<详细列表：
-                    <items:{item | - <item>}; separator=", ">
-                    >>
-                    """);
+                new STGroupString(
+                        """
+                        report(title, items, isDetailed, itemCount) ::= <<报告：<title>
+                        <if(isDetailed)>
+                        <itemList(items)>
+                        <else>
+                        共 <itemCount> 项
+                        <endif>
+                        >>
+                        itemList(items) ::= <<详细列表：
+                        <items:{item | - <item>}; separator=", ">
+                        >>
+                        """);
 
         ST template = group.getInstanceOf("report");
         template.add("title", "月度总结");
@@ -463,19 +467,19 @@ class StringTemplateDemoTest {
     void renderComplexScenario_notDetailed() {
         // 复杂场景：非详细模式
         STGroupString group =
-            new STGroupString(
-                """
-                    report(title, items, isDetailed, itemCount) ::= <<报告：<title>
-                    <if(isDetailed)>
-                    <itemList(items)>
-                    <else>
-                    共 <itemCount> 项
-                    <endif>
-                    >>
-                    itemList(items) ::= <<详细列表：
-                    <items:{item | - <item>}; separator=", ">
-                    >>
-                    """);
+                new STGroupString(
+                        """
+                        report(title, items, isDetailed, itemCount) ::= <<报告：<title>
+                        <if(isDetailed)>
+                        <itemList(items)>
+                        <else>
+                        共 <itemCount> 项
+                        <endif>
+                        >>
+                        itemList(items) ::= <<详细列表：
+                        <items:{item | - <item>}; separator=", ">
+                        >>
+                        """);
 
         ST template = group.getInstanceOf("report");
         template.add("title", "月度总结");
@@ -490,9 +494,7 @@ class StringTemplateDemoTest {
         assertTrue(normalized.contains("共 3 项"));
     }
 
-    /**
-     * 用户实体类，用于 StringTemplate 属性访问测试
-     */
+    /** 用户实体类，用于 StringTemplate 属性访问测试 */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -502,5 +504,3 @@ class StringTemplateDemoTest {
         private String email;
     }
 }
-
-
